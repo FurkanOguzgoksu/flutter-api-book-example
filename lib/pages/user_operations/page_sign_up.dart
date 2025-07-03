@@ -99,13 +99,14 @@ class _PageSignUpState extends State<PageSignUp> {
                 ),
               ),
 
-              const SizedBox(height: 30),
-
               // Expanded, içindeki widget’ın mümkün olan tüm boş alanı kaplamasını sağlar.
               // Flexible da boş alanı kullanır ama gerekirse sıkışabilir, yani “gerektiği kadar yer kapla” der.
               Flexible(
                 child: Padding(
-                  padding: const EdgeInsets.all(25.0),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 10,
+                  ),
                   child: Card(
                     elevation: 8,
                     shape: RoundedRectangleBorder(

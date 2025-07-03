@@ -33,7 +33,7 @@ class BasketProvider with ChangeNotifier {
   );
 
   void incrementBookCount(Book book) {
-    if (_basketBooks.containsKey(book)) {
+    if (_basketBooks.containsKey(book) && _basketBooks[book]! < 10) {
       _basketBooks[book] = _basketBooks[book]! + 1;
 
       notifyListeners();
