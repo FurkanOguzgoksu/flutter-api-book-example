@@ -38,10 +38,14 @@ class _PageShoppingBasketState extends State<PageShoppingBasket> {
               padding: const EdgeInsets.all(16),
               child: Row(
                 children: [
-                  Text("Ürün sayısı: ${basket.totalItems}"),
                   Text(
-                    "Toplam: ${basket.totalPrice.toStringAsFixed(2)} ₺",
-                    textAlign: TextAlign.center,
+                    "Ürün sayısı: ${basket.totalItems}",
+                    style: TextStyle(fontSize: 17),
+                  ),
+                  const Spacer(),
+                  Text(
+                    "Toplam Tutar: ${basket.totalPrice.toStringAsFixed(2)} ₺",
+
                     style: TextStyle(fontSize: 20),
                   ),
                 ],
