@@ -62,13 +62,30 @@ class CardListBook extends StatelessWidget {
                   Row(
                     children: [
                       IconButton(
-                        icon: Icon(Icons.delete),
+                        icon: Icon(Icons.delete, color: Colors.red),
                         onPressed: () {
                           basketProvider.removeBook(book);
                         },
                       ),
                       Text("Sil"),
                       const SizedBox(width: 100),
+                      IconButton(
+                        onPressed: () {
+                          basketProvider.decrementBookCount(book);
+                        },
+                        icon: Icon(Icons.add),
+                      ),
+                      Container(
+                        height: 30,
+                        width: 30,
+                        child: Text("${basketProvider.getBookCount(book)}"),
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          basketProvider.incrementBookCount(book);
+                        },
+                        icon: Icon(Icons.remove),
+                      ),
                       Text(
                         "$price ₺",
                         style: const TextStyle(

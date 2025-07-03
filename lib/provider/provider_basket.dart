@@ -7,12 +7,17 @@ class BasketProvider with ChangeNotifier {
   //Bu sınıf, veride bir değişiklik olduğunda, bu değişikliği kullanan (dinleyen)
   //tüm widget'lara “veri değişti!” sinyali gönderir. Böylece UI otomatik güncellenir.
 
-  final List<Book> _basketBooks = [];
+  final Map<Book, int> _basketBooks = {};
 
-  List<Book> get basketBooks => _basketBooks;
+  Map<Book, int> get basketBooks => _basketBooks;
 
   void addBook(Book book) {
-    _basketBooks.add(book);
+    if (basketBooks.containsKey(book)) {
+      _basketBooks[book] = _basketBooks[book]! + 1;
+    } else {
+      _basketBooks[book] = 1;
+    }
+
     notifyListeners(); // Tüm dinleyicileri uyar, arayüz güncellensin
     // with ile aldım
   }
@@ -22,6 +27,29 @@ class BasketProvider with ChangeNotifier {
     notifyListeners(); // Tüm dinleyicileri uyar, arayüz güncellensin
   }
 
-  double get totalPrice =>
-      _basketBooks.fold(0, (sum, book) => sum + (book.price ?? kBookPrice));
+  double get totalPrice => _basketBooks.entries.fold(
+    0,
+    (sum, entry) => sum + ((entry.key.price ?? kBookPrice) * entry.value),
+  );
+
+  void incrementBookCount(Book book) {
+    if (_basketBooks.containsKey(book)) {
+      _basketBooks[book] = _basketBooks[book]! + 1;
+
+      notifyListeners();
+    }
+  }
+
+  void decrementBookCount(Book book) {
+    if (_basketBooks.containsKey(book) && _basketBooks[book]! > 1) {
+      _basketBooks[book] = _basketBooks[book]! - 1;
+    } else {
+      _basketBooks.remove(book);
+    }
+    notifyListeners();
+  }
+
+  int getBookCount(Book book) {
+    return _basketBooks[book] ?? 0;
+  }
 }

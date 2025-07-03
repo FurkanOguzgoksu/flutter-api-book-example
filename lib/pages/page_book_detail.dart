@@ -17,7 +17,7 @@ class _PageBookState extends State<PageBook> {
   @override
   Widget build(BuildContext context) {
     final basket = Provider.of<BasketProvider>(context);
-    final bool isInBasket = basket.basketBooks.contains(widget.fetchedBook);
+    final bool isInBasket = basket.basketBooks.containsKey(widget.fetchedBook);
 
     return Scaffold(
       appBar: AppBar(

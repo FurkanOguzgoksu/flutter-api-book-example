@@ -26,7 +26,7 @@ class _PageShoppingBasketState extends State<PageShoppingBasket> {
               padding: const EdgeInsets.all(8),
               itemCount: basket.basketBooks.length,
               itemBuilder: (context, index) {
-                var book = basket.basketBooks[index];
+                var book = basket.basketBooks.keys.toList()[index];
                 return CardListBook(book: book);
               },
             ),

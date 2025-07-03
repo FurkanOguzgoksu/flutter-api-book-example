@@ -21,7 +21,7 @@ class CardGridBook extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final basket = Provider.of<BasketProvider>(context);
-    final bool isInBasket = basket.basketBooks.contains(fetchedbook);
+    final bool isInBasket = basket.basketBooks.containsKey(fetchedbook);
 
     final String imageLinks =
         fetchedbook.volumeInfo?.imageLinks?.thumbnail ?? "";
