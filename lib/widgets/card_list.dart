@@ -71,7 +71,35 @@ class CardListBook extends StatelessWidget {
                               size: 20,
                             ),
                             onPressed: () {
-                              basketProvider.removeBook(book);
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text(
+                                      "Sil",
+                                      style: TextStyle(color: Colors.red),
+                                    ),
+                                    content: Text(
+                                      "Ürünü silmek istediğinize emin misiniz?",
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text("Hayır"),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          basketProvider.removeBook(book);
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text("Evet"),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
                             },
                           ),
                           const Text("Sil"),
@@ -80,7 +108,35 @@ class CardListBook extends StatelessWidget {
                       IconButton(
                         onPressed: () {
                           if (basketProvider.getBookCount(book) == 1) {
-                            basketProvider.removeBook(book);
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text(
+                                    "Sil",
+                                    style: TextStyle(color: Colors.red),
+                                  ),
+                                  content: Text(
+                                    "Ürünü silmek istediğinize emin misiniz?",
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: Text("Hayır"),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        basketProvider.removeBook(book);
+                                        Navigator.pop(context);
+                                      },
+                                      child: Text("Evet"),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
                           } else {
                             basketProvider.decrementBookCount(book);
                           }
