@@ -52,4 +52,7 @@ class BasketProvider with ChangeNotifier {
   int getBookCount(Book book) {
     return _basketBooks[book] ?? 0;
   }
+
+  int get totalItems =>
+      _basketBooks.values.fold(0, (sum, count) => sum + count);
 }
