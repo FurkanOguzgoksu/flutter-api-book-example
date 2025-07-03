@@ -59,7 +59,7 @@ class _PageSignUpState extends State<PageSignUp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFE3F2FD),
+      backgroundColor: Colors.purpleAccent.shade100,
       body: SafeArea(
         child: Center(
           child: Column(
