@@ -37,7 +37,7 @@ class _PageShoppingBasketState extends State<PageShoppingBasket> {
               color: kBackgroundColor,
               padding: const EdgeInsets.all(16),
               child: Text(
-                "Toplam: ${basket.totalPrice} ₺",
+                "Toplam: ${basket.totalPrice.toStringAsFixed(2)} ₺",
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 20),
               ),

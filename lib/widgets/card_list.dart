@@ -17,9 +17,9 @@ class CardListBook extends StatelessWidget {
 
     return Card(
       elevation: 4,
-      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
       child: Padding(
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(8),
         child: Row(
           children: [
             Container(
@@ -37,7 +37,7 @@ class CardListBook extends StatelessWidget {
               ),
             ),
 
-            const SizedBox(width: 12),
+            const SizedBox(width: 5),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -60,37 +60,60 @@ class CardListBook extends StatelessWidget {
                   ),
                   const SizedBox(height: 12),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      IconButton(
-                        icon: Icon(Icons.delete, color: Colors.red),
-                        onPressed: () {
-                          basketProvider.removeBook(book);
-                        },
+                      Row(
+                        children: [
+                          IconButton(
+                            icon: const Icon(
+                              Icons.delete,
+                              color: Colors.red,
+                              size: 20,
+                            ),
+                            onPressed: () {
+                              basketProvider.removeBook(book);
+                            },
+                          ),
+                          const Text("Sil"),
+                        ],
                       ),
-                      Text("Sil"),
-                      const SizedBox(width: 100),
                       IconButton(
                         onPressed: () {
-                          basketProvider.decrementBookCount(book);
+                          if (basketProvider.getBookCount(book) == 1) {
+                            basketProvider.removeBook(book);
+                          } else {
+                            basketProvider.decrementBookCount(book);
+                          }
                         },
-                        icon: Icon(Icons.add),
+                        icon: const Icon(Icons.remove, size: 20),
                       ),
                       Container(
                         height: 30,
                         width: 30,
-                        child: Text("${basketProvider.getBookCount(book)}"),
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Text(
+                          "${basketProvider.getBookCount(book)}",
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
                       IconButton(
                         onPressed: () {
                           basketProvider.incrementBookCount(book);
                         },
-                        icon: Icon(Icons.remove),
+                        icon: const Icon(Icons.add, size: 20),
                       ),
                       Text(
-                        "$price ₺",
+                        "${(price * basketProvider.getBookCount(book)).toStringAsFixed(2)} ₺",
                         style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ],
