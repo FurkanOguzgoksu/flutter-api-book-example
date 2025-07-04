@@ -27,10 +27,14 @@ class BasketProvider with ChangeNotifier {
     notifyListeners(); // Tüm dinleyicileri uyar, arayüz güncellensin
   }
 
-  double get totalPrice => _basketBooks.entries.fold(
-    0,
-    (sum, entry) => sum + ((entry.key.price ?? kBookPrice) * entry.value),
-  );
+  double get totalPrice {
+    double totalSum = 0;
+
+    for (var entry in _basketBooks.entries) {
+      totalSum += (entry.key.price ?? 1.00) * entry.value;
+    }
+    return totalSum;
+  }
 
   void incrementBookCount(Book book) {
     if (_basketBooks.containsKey(book) && _basketBooks[book]! < 10) {
@@ -53,6 +57,13 @@ class BasketProvider with ChangeNotifier {
     return _basketBooks[book] ?? 0;
   }
 
-  int get totalItems =>
-      _basketBooks.values.fold(0, (sum, count) => sum + count);
+  int get totalItems {
+    int sum = 0;
+
+    for (var value in _basketBooks.values) {
+      sum += value;
+    }
+
+    return sum;
+  }
 }

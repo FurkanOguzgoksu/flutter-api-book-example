@@ -16,7 +16,6 @@ class _PageFavoriteState extends State<PageFavorite> {
   @override
   Widget build(BuildContext context) {
     final favorite = Provider.of<FavoriteProvider>(context);
-
     final orientation = MediaQuery.of(context).orientation;
 
     return Scaffold(

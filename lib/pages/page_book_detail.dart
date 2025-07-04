@@ -189,7 +189,6 @@ class _PageBookState extends State<PageBook> {
                 ),
               ),
             ),
-
             Expanded(
               child: SizedBox(
                 height: double.infinity,
@@ -204,7 +203,6 @@ class _PageBookState extends State<PageBook> {
                       ? null
                       : () {
                           basket.addBook(widget.fetchedBook);
-
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                               content: Text("Sepete başarıyla eklendi"),
