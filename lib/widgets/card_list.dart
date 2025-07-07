@@ -1,3 +1,4 @@
+import 'package:film_app/provider/provider_favorite.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:film_app/widgets/constant.dart';
@@ -11,6 +12,7 @@ class CardListBook extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final basketProvider = Provider.of<BasketProvider>(context);
+    final favoriteProvider = Provider.of<FavoriteProvider>(context);
     final String title = book.volumeInfo?.title ?? "Başlık yok";
     final String authors = book.volumeInfo?.authors?.join("-") ?? "";
     final double price = book.price ?? kBookPrice;
@@ -37,19 +39,48 @@ class CardListBook extends StatelessWidget {
               ),
             ),
 
-            const SizedBox(width: 5),
+            const SizedBox(width: 10),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Flexible(
+                        child: Text(
+                          title,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      PopupMenuButton(
+                        itemBuilder: (context) => [
+                          PopupMenuItem(
+                            value: 1,
+                            child: Text("Favorilere Ekle", style: TextStyle()),
+                          ),
+                          PopupMenuItem(
+                            value: 2,
+                            child: Text(
+                              "Sil",
+                              style: TextStyle(color: Colors.red),
+                            ),
+                          ),
+                        ],
+                        onSelected: (value) {
+                          if (value == 1) {
+                            favoriteProvider.toggleBookFavorite(book);
+                          } else if (value == 2) {
+                            basketProvider.removeBook(book);
+                          }
+                        },
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 6),
                   Text(
@@ -68,7 +99,7 @@ class CardListBook extends StatelessWidget {
                             icon: const Icon(
                               Icons.delete,
                               color: Colors.red,
-                              size: 20,
+                              size: 25,
                             ),
                             onPressed: () {
                               showDialog(
@@ -102,7 +133,6 @@ class CardListBook extends StatelessWidget {
                               );
                             },
                           ),
-                          const Text("Sil"),
                         ],
                       ),
                       IconButton(
@@ -166,7 +196,7 @@ class CardListBook extends StatelessWidget {
                         icon: const Icon(Icons.add, size: 20),
                       ),
                       Text(
-                        "${(price * basketProvider.getBookCount(book)).toStringAsFixed(2)} ₺",
+                        "${price.toStringAsFixed(2)} ₺",
                         style: const TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
