@@ -8,7 +8,6 @@ import 'package:film_app/pages/page_book_detail.dart';
 import 'package:film_app/pages/page_favorite.dart';
 import 'package:film_app/pages/page_shopping_basket.dart';
 import 'package:film_app/pages/user_operations/page_log_in.dart';
-
 import 'package:film_app/services/http_services.dart';
 import 'package:film_app/provider/provider_favorite.dart';
 import 'package:film_app/widgets/card_grid.dart';
@@ -111,7 +110,6 @@ class _PageHomeState extends State<PageHome> {
 
     try {
       var values = await HttpService.fetchBooks(currentPage);
-
       setState(() {
         pageInfo = values.pageInfo;
         allBooks = values.books;
@@ -192,7 +190,13 @@ class _PageHomeState extends State<PageHome> {
             child: TextField(
               cursorColor: Colors.green,
               controller: searchContreller,
-              decoration: InputDecoration(hintText: "Kitap ara.."),
+              decoration: InputDecoration(
+                hintText: "Kitap ara..",
+                prefixIcon: Icon(Icons.search, color: Colors.green),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+              ),
               onChanged: (input) {
                 setState(() {
                   filteredBooks = allBooks.where((book) {
@@ -207,6 +211,7 @@ class _PageHomeState extends State<PageHome> {
               },
             ),
           ),
+
           FirstBanner(isConnected: _isConnected, personal: widget.personal),
           Expanded(
             child: FutureBuilder<List<Book>>(
