@@ -18,7 +18,16 @@ class _PageShoppingBasketState extends State<PageShoppingBasket> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: kBackgroundColor,
-        title: const Text("Sepetim"),
+        title: Row(
+          children: [
+            Text("Sepetim"),
+            const Spacer(),
+            Text(
+              "Ürün sayısı: ${basket.totalItems}",
+              style: TextStyle(fontSize: 17),
+            ),
+          ],
+        ),
       ),
       body: basket.basketBooks.isEmpty
           ? const Center(child: Text("Sepetinizde kitap yok."))
@@ -39,14 +48,26 @@ class _PageShoppingBasketState extends State<PageShoppingBasket> {
               child: Row(
                 children: [
                   Text(
-                    "Ürün sayısı: ${basket.totalItems}",
-                    style: TextStyle(fontSize: 17),
-                  ),
-                  const Spacer(),
-                  Text(
                     "Toplam Tutar: ${basket.totalPrice.toStringAsFixed(2)} ₺",
 
                     style: TextStyle(fontSize: 20),
+                  ),
+                  const Spacer(),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadiusGeometry.zero,
+                      ),
+                    ),
+                    onPressed: () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text("Ödemeye yönlendiriliyorsunuz"),
+                          duration: Duration(seconds: 3),
+                        ),
+                      );
+                    },
+                    child: Text("Ödeme Yap"),
                   ),
                 ],
               ),
