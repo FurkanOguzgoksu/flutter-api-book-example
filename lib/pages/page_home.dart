@@ -21,7 +21,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class PageHome extends StatefulWidget {
   final UserModel? personal;
 
-  const PageHome({super.key, required this.personal});
+  const PageHome({super.key, this.personal});
 
   @override
   State<PageHome> createState() => _PageHomeState();
@@ -163,7 +163,10 @@ class _PageHomeState extends State<PageHome> {
               } else if (value == 2) {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => PageShoppingBasket()),
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        PageShoppingBasket(personal: widget.personal),
+                  ),
                 );
               }
             },
@@ -266,7 +269,7 @@ class _PageHomeState extends State<PageHome> {
                       crossAxisCount: orientation == Orientation.portrait
                           ? 2
                           : 3,
-                      childAspectRatio: 0.47,
+                      childAspectRatio: 0.45,
                     ),
                     itemCount: filteredBooks.length,
                     itemBuilder: (context, index) {
