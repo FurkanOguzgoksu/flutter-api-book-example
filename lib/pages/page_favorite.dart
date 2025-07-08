@@ -29,7 +29,7 @@ class _PageFavoriteState extends State<PageFavorite> {
               padding: const EdgeInsets.all(8),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: orientation == Orientation.portrait ? 2 : 3,
-                childAspectRatio: 0.5,
+                childAspectRatio: 0.45,
               ),
               itemCount: favorite.favoriteBooks.length,
               itemBuilder: (context, index) {
