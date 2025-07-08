@@ -1,4 +1,5 @@
 import 'package:film_app/features_personal/user_model.dart';
+import 'package:film_app/pages/page_home.dart';
 import 'package:film_app/pages/page_personel_information.dart';
 import 'package:film_app/widgets/constant.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +30,15 @@ class DrawerMenu extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.home),
             title: const Text("Ana Sayfa"),
-            onTap: () {},
+            onTap: () {
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => PageHome(personal: personal),
+                ),
+                (route) => false,
+              );
+            },
           ),
           ListTile(
             leading: const Icon(Icons.person),
@@ -48,7 +57,15 @@ class DrawerMenu extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.book),
             title: const Text("Kitaplar"),
-            onTap: () => {},
+            onTap: () {
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => PageHome(personal: personal),
+                ),
+                (route) => false,
+              );
+            },
           ),
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 8.0),
