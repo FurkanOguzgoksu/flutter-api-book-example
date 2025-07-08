@@ -62,7 +62,16 @@ class CardListBook extends StatelessWidget {
                         itemBuilder: (context) => [
                           PopupMenuItem(
                             value: 1,
-                            child: Text("Favorilere Ekle", style: TextStyle()),
+                            child: Text(
+                              !favoriteProvider.isFavorite(book)
+                                  ? "Favorilere Ekle"
+                                  : "Favorilerden Çıkar",
+                              style: TextStyle(
+                                color: !favoriteProvider.isFavorite(book)
+                                    ? Colors.green
+                                    : Colors.red,
+                              ),
+                            ),
                           ),
                           PopupMenuItem(
                             value: 2,
@@ -76,7 +85,35 @@ class CardListBook extends StatelessWidget {
                           if (value == 1) {
                             favoriteProvider.toggleBookFavorite(book);
                           } else if (value == 2) {
-                            basketProvider.removeBook(book);
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text(
+                                    "Sil",
+                                    style: TextStyle(color: Colors.red),
+                                  ),
+                                  content: Text(
+                                    "Ürünü silmek istediğinize emin misiniz?",
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: Text("Hayır"),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        basketProvider.removeBook(book);
+                                        Navigator.pop(context);
+                                      },
+                                      child: Text("Evet"),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
                           }
                         },
                       ),
@@ -93,48 +130,6 @@ class CardListBook extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Row(
-                        children: [
-                          IconButton(
-                            icon: const Icon(
-                              Icons.delete,
-                              color: Colors.red,
-                              size: 25,
-                            ),
-                            onPressed: () {
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: Text(
-                                      "Sil",
-                                      style: TextStyle(color: Colors.red),
-                                    ),
-                                    content: Text(
-                                      "Ürünü silmek istediğinize emin misiniz?",
-                                    ),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        },
-                                        child: Text("Hayır"),
-                                      ),
-                                      TextButton(
-                                        onPressed: () {
-                                          basketProvider.removeBook(book);
-                                          Navigator.pop(context);
-                                        },
-                                        child: Text("Evet"),
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
-                            },
-                          ),
-                        ],
-                      ),
                       IconButton(
                         onPressed: () {
                           if (basketProvider.getBookCount(book) == 1) {
