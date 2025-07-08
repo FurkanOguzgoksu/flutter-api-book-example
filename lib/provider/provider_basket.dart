@@ -26,6 +26,11 @@ class BasketProvider with ChangeNotifier {
     notifyListeners(); // Tüm dinleyicileri uyar, arayüz güncellensin
   }
 
+  void deleteBookList() {
+    _basketBooks.clear();
+    notifyListeners();
+  }
+
   double get totalPrice {
     double totalSum = 0;
 
