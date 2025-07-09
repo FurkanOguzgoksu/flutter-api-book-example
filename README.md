@@ -2,6 +2,6 @@
 
 Bu proje Butkon Asansör'de yapmış olduğum staj süresince geliştirilmiştir.
 
-Desteklerinden dolayı Bayram YARIM'a(@BayramYARIM) teşekkürler.
+Desteklerinden dolayı <a href="https://github.com/BayramYARIM" target="_blank">Bayram YARIM</a>'a teşekkür ederim.
 
 
