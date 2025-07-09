@@ -148,7 +148,7 @@ class _PageForgotPasswordState extends State<PageForgotPassword> {
                                               ).showSnackBar(
                                                 const SnackBar(
                                                   backgroundColor: Colors.green,
-                                                  duration: const Duration(
+                                                  duration: Duration(
                                                     seconds: 3,
                                                   ),
                                                   content: Text(
