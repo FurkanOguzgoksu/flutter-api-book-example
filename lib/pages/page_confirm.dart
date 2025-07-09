@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:film_app/features_personal/user_model.dart';
 import 'package:film_app/pages/page_home.dart';
 import 'package:film_app/provider/provider_basket.dart';
