@@ -1,6 +1,7 @@
 import 'package:film_app/features_personal/user_model.dart';
 import 'package:film_app/pages/page_home.dart';
 import 'package:film_app/pages/page_personel_information.dart';
+import 'package:film_app/pages/user_operations/page_my_addresses.dart';
 import 'package:film_app/widgets/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -22,7 +23,7 @@ class DrawerMenu extends StatelessWidget {
               child: Center(
                 child: Text(
                   "Kitap Uygulamasına Hoş Geldiniz",
-                  style: TextStyle(fontSize: 18.0, color: Colors.black),
+                  style: TextStyle(fontSize: 18.0, color: kBlackColor),
                 ),
               ),
             ),
@@ -31,13 +32,11 @@ class DrawerMenu extends StatelessWidget {
             leading: const Icon(Icons.home),
             title: const Text("Ana Sayfa"),
             onTap: () {
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => PageHome(personal: personal),
-                ),
-                (route) => false,
-              );
+              if (context.widget.runtimeType == PageHome) {
+                Navigator.pop(context);
+              } else {
+                Navigator.pop(context);
+              }
             },
           ),
           ListTile(
@@ -51,6 +50,16 @@ class DrawerMenu extends StatelessWidget {
                       PagePersonelInformation(personal: personal),
                 ),
               ),
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.add_home),
+            title: const Text("Adreslerim"),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => PageMyAddresses()),
+              );
             },
           ),
 
