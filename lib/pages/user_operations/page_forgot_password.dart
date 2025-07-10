@@ -64,7 +64,7 @@ class _PageForgotPasswordState extends State<PageForgotPassword> {
               ),
 
               const SizedBox(height: 10),
-              const Padding(
+              Padding(
                 padding: EdgeInsets.symmetric(horizontal: 24.0),
                 child: Center(
                   child: Text(
@@ -72,7 +72,7 @@ class _PageForgotPasswordState extends State<PageForgotPassword> {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 20,
-                      color: Colors.black87,
+                      color: kBlackColor,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -180,9 +180,9 @@ class _PageForgotPasswordState extends State<PageForgotPassword> {
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                   ),
-                                  child: const Text(
+                                  child: Text(
                                     "Gönder",
-                                    style: TextStyle(color: Colors.white),
+                                    style: TextStyle(color: kTextWhiteColor),
                                   ),
                                 ),
                               ),

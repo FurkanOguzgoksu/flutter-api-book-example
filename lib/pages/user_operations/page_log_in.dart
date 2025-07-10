@@ -145,12 +145,12 @@ class _LogInPageState extends State<LogInPage> {
                                   value == null || value.isEmpty
                                   ? "Kullanıcı adı boş bırakılamaz"
                                   : null,
-                              decoration: const InputDecoration(
+                              decoration: InputDecoration(
                                 labelText: "Kullanıcı adınızı giriniz",
                                 border: OutlineInputBorder(),
                                 prefixIcon: Icon(
                                   Icons.person,
-                                  color: Colors.black,
+                                  color: kBlackColor,
                                 ),
                               ),
                             ),
@@ -170,7 +170,7 @@ class _LogInPageState extends State<LogInPage> {
                                 border: const OutlineInputBorder(),
                                 prefixIcon: Icon(
                                   Icons.password,
-                                  color: Colors.black,
+                                  color: kBlackColor,
                                 ),
                                 suffixIcon: IconButton(
                                   onPressed: () {
@@ -203,7 +203,7 @@ class _LogInPageState extends State<LogInPage> {
                                 "Şifrenizi mi unuttunuz?",
                                 style: TextStyle(
                                   decoration: TextDecoration.underline,
-                                  color: Colors.black,
+                                  color: kBlackColor,
                                 ),
                               ),
                             ),
@@ -231,7 +231,7 @@ class _LogInPageState extends State<LogInPage> {
                                           },
                                     child: Text(
                                       "Kayıt Ol",
-                                      style: TextStyle(color: Colors.white),
+                                      style: TextStyle(color: kTextWhiteColor),
                                     ),
                                   ),
                                 ),
@@ -311,9 +311,9 @@ class _LogInPageState extends State<LogInPage> {
                                             }
                                           },
 
-                                    child: const Text(
+                                    child: Text(
                                       "Giriş Yap",
-                                      style: TextStyle(color: Colors.white),
+                                      style: TextStyle(color: kTextWhiteColor),
                                     ),
                                   ),
                                 ),
@@ -321,10 +321,10 @@ class _LogInPageState extends State<LogInPage> {
                             ),
                             const SizedBox(height: 10),
                             Row(
-                              children: const [
+                              children: [
                                 Expanded(
                                   child: Divider(
-                                    color: Colors.black,
+                                    color: kBlackColor,
                                     thickness: 1, // Kalınlık
                                   ),
                                 ),
@@ -332,12 +332,12 @@ class _LogInPageState extends State<LogInPage> {
                                   padding: EdgeInsets.symmetric(horizontal: 10),
                                   child: Text(
                                     "Hesabını Bağla",
-                                    style: TextStyle(color: Colors.black),
+                                    style: TextStyle(color: kBlackColor),
                                   ),
                                 ),
                                 Expanded(
                                   child: Divider(
-                                    color: Colors.black,
+                                    color: kBlackColor,
                                     thickness: 1,
                                   ),
                                 ),

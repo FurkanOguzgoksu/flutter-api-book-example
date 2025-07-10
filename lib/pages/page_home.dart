@@ -131,7 +131,7 @@ class _PageHomeState extends State<PageHome> {
         title: const Text("AnaSayfa"),
         actions: [
           PopupMenuButton(
-            icon: Icon(Icons.person, color: Colors.white),
+            icon: Icon(Icons.person, color: kTextWhiteColor),
             itemBuilder: (context) => [
               PopupMenuItem(
                 value: 1,
@@ -181,7 +181,7 @@ class _PageHomeState extends State<PageHome> {
                 MaterialPageRoute(builder: (context) => LogInPage()),
               );
             },
-            icon: const Icon(Icons.logout, color: Colors.white),
+            icon: Icon(Icons.logout, color: kTextWhiteColor),
           ),
         ],
       ),
@@ -191,7 +191,6 @@ class _PageHomeState extends State<PageHome> {
           Padding(
             padding: const EdgeInsets.all(10.0),
             child: TextField(
-              cursorColor: Colors.green,
               controller: searchContreller,
               decoration: InputDecoration(
                 hintText: "Kitap ara..",
@@ -326,8 +325,8 @@ class _PageHomeState extends State<PageHome> {
               icon: Icon(
                 Icons.arrow_left_outlined,
                 color: pageInfo?.previousPage == true
-                    ? Colors.black
-                    : Colors.white,
+                    ? kBlackColor
+                    : kTextWhiteColor,
               ),
             ),
             Text("${pageInfo?.page} / ${pageInfo?.totalPages} "),
@@ -361,7 +360,9 @@ class _PageHomeState extends State<PageHome> {
                   : null,
               icon: Icon(
                 Icons.arrow_right_outlined,
-                color: pageInfo?.nextPage == true ? Colors.black : Colors.white,
+                color: pageInfo?.nextPage == true
+                    ? kBlackColor
+                    : kTextWhiteColor,
               ),
             ),
           ],

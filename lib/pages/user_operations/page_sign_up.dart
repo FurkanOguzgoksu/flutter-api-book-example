@@ -90,11 +90,11 @@ class _PageSignUpState extends State<PageSignUp> {
               ),
 
               const SizedBox(height: 10),
-              const Text(
+              Text(
                 "Aramıza katılmak için bilgilerini doldurman yeterli!",
                 style: TextStyle(
                   fontSize: 14,
-                  color: Colors.black54,
+                  color: kBlackColor,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -302,11 +302,11 @@ class _PageSignUpState extends State<PageSignUp> {
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                   ),
-                                  child: const Text(
+                                  child: Text(
                                     "Kayıt Ol",
                                     style: TextStyle(
                                       fontSize: 16,
-                                      color: Colors.white,
+                                      color: kTextWhiteColor,
                                     ),
                                   ),
                                 ),
