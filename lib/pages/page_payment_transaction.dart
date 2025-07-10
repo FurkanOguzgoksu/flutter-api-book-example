@@ -1,5 +1,6 @@
 import 'package:film_app/features_personal/user_model.dart';
 import 'package:film_app/pages/page_confirm.dart';
+import 'package:film_app/pages/user_operations/page_my_addresses.dart';
 import 'package:film_app/widgets/constant.dart';
 import 'package:film_app/provider/provider_basket.dart';
 import 'package:flutter/material.dart';
@@ -16,11 +17,10 @@ class PagePaymentTransaction extends StatefulWidget {
 }
 
 class _PagePaymentTransactionState extends State<PagePaymentTransaction> {
-  final TextEditingController _addressController = TextEditingController();
   final TextEditingController cardNoController = TextEditingController();
   final TextEditingController cvvController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  Set<String> savedAddress = {"Evim", "Ofisim", "Evim2"};
+  List<Map<String, String>> savedAddress = [];
   String? selectedAdress;
   String? selectedPayment;
   bool showTextField = false;
@@ -28,6 +28,12 @@ class _PagePaymentTransactionState extends State<PagePaymentTransaction> {
   bool isPaymentSuccess = false;
   int month = 1;
   int year = 2025;
+
+  @override
+  void initState() {
+    super.initState();
+    savedAddress = myAddres;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,121 +84,88 @@ class _PagePaymentTransactionState extends State<PagePaymentTransaction> {
                             ),
                           ),
                           const Spacer(),
-                          IconButton(
-                            icon: const Icon(Icons.add_home),
+                          ElevatedButton(
                             onPressed: () {
-                              setState(() {
-                                showTextField = !showTextField;
-                              });
+                              if (savedAddress.isNotEmpty) {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      title: Row(
+                                        children: [
+                                          const Text("Kayıtlı Adreslerim"),
+                                          const Spacer(),
+                                          IconButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      PageMyAddresses(),
+                                                ),
+                                              );
+                                            },
+                                            icon: Icon(Icons.add_home_work),
+                                          ),
+                                        ],
+                                      ),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: savedAddress.map((adress) {
+                                          return RadioListTile<String>(
+                                            title: Text(adress["title"]!),
+                                            subtitle: Text(adress["addres"]!),
+                                            value: adress["addres"]!,
+                                            groupValue: selectedAdress,
+                                            onChanged: (value) {
+                                              setState(() {
+                                                selectedAdress = value;
+                                              });
+                                              Navigator.of(context).pop();
+                                            },
+                                          );
+                                        }).toList(),
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.of(context).pop(),
+                                          child: const Text("Kapat"),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text("Kayıtlı adres bulunamadı."),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
+                              }
                             },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: kBackgroundColor,
+                              foregroundColor: kBlackColor,
+                            ),
+                            child: const Text("Adres Seç"),
                           ),
-                          const Text("Ekle"),
                         ],
                       ),
                       const Divider(thickness: 1.5),
-                      if (savedAddress.isEmpty) ...[
-                        Center(
-                          child: Text(
-                            "Kayıtlı adres yok",
-                            style: TextStyle(fontSize: 16),
-                          ),
-                        ),
-                      ],
-                      if (savedAddress.isNotEmpty) ...[
-                        const SizedBox(height: 10),
-                        ...savedAddress.map(
-                          (adress) => Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 4.0),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: RadioListTile<String>(
-                                    title: Text(adress),
-                                    value: adress,
-                                    groupValue: selectedAdress,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        selectedAdress = value;
-                                      });
-                                    },
-                                  ),
-                                ),
-                                IconButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      savedAddress.remove(adress);
-                                      if (selectedAdress == adress) {
-                                        selectedAdress = null;
-                                      }
-                                    });
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content: Text("Adres silindi"),
-                                      ),
-                                    );
-                                  },
-                                  icon: Icon(Icons.delete, color: Colors.red),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                      const SizedBox(height: 10),
-                      if (showTextField)
-                        Column(
-                          children: [
-                            SizedBox(
-                              width: double.infinity,
-                              child: TextField(
-                                controller: _addressController,
-                                decoration: const InputDecoration(
-                                  hintText: "Adresinizi girin",
-                                  border: OutlineInputBorder(),
-                                ),
-                                maxLines: 3,
-                              ),
-                            ),
-                            const SizedBox(height: 10),
-                            ElevatedButton(
-                              onPressed: () {
-                                if (_addressController.text.trim().isNotEmpty &&
-                                    savedAddress.contains(
-                                          _addressController.text.toLowerCase(),
-                                        ) ==
-                                        false) {
-                                  setState(() {
-                                    savedAddress.add(
-                                      _addressController.text.trim(),
-                                    );
-                                    showTextField = false;
-                                    _addressController.clear();
-                                  });
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text("Adres kaydedildi"),
-                                      duration: Duration(seconds: 2),
-                                    ),
-                                  );
-                                } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text(
-                                        "Lütfen farklı adres girin!",
-                                      ),
-                                      duration: Duration(seconds: 2),
-                                    ),
-                                  );
-                                }
-                              },
-                              child: const Text("Kaydet"),
-                            ),
-                          ],
-                        ),
+                      Text(
+                        selectedAdress != null
+                            ? selectedAdress.toString()
+                            : "Lütfen adres seçiniz!",
+                        style: TextStyle(fontSize: 18),
+                      ),
                     ],
                   ),
                 ),
               ),
+              const SizedBox(height: 10),
               Card(
                 margin: const EdgeInsets.only(bottom: 16),
                 shape: RoundedRectangleBorder(
@@ -259,7 +232,7 @@ class _PagePaymentTransactionState extends State<PagePaymentTransaction> {
                                     keyboardType: TextInputType.number,
                                     inputFormatters: [
                                       FilteringTextInputFormatter.digitsOnly,
-                                      _cardNumberFormatter(),
+                                      _CardNumberFormatter(),
                                     ],
                                     validator: (value) =>
                                         value == null ||
@@ -336,7 +309,7 @@ class _PagePaymentTransactionState extends State<PagePaymentTransaction> {
                                     },
                                     inputFormatters: [
                                       FilteringTextInputFormatter.digitsOnly,
-                                      _threeDigitInputFormatter(),
+                                      _ThreeDigitInputFormatter(),
                                     ],
                                   ),
                                 ],
@@ -430,7 +403,6 @@ class _PagePaymentTransactionState extends State<PagePaymentTransaction> {
                   ),
                 ),
               ),
-
               Card(
                 margin: const EdgeInsets.only(bottom: 16),
                 shape: RoundedRectangleBorder(
@@ -491,98 +463,120 @@ class _PagePaymentTransactionState extends State<PagePaymentTransaction> {
                 ),
                 child: SizedBox(
                   width: double.infinity,
-                  child: Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Text(
-                      "Ödenecek Toplam Ücret: ${NumberFormat.currency(locale: 'tr_TR', symbol: '', decimalDigits: 2).format(basket.totalPrice)} ₺",
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-
-              Center(
-                child: ElevatedButton(
-                  onPressed: () async {
-                    if (selectedAdress == null && selectedPayment == null) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          backgroundColor: Colors.red,
-                          content: Text("Lütfen adres ve ödeme yöntemi seçin"),
-                        ),
-                      );
-                      return;
-                    } else if (selectedAdress == null) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          backgroundColor: Colors.red,
-                          content: Text("Lütfen adres yöntemi seçin"),
-                        ),
-                      );
-                      return;
-                    } else if (selectedPayment == null) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          backgroundColor: Colors.red,
-                          content: Text("Lütfen ödeme yöntemi seçin"),
-                        ),
-                      );
-                      return;
-                    }
-                    if (showCreditCard && !_formKey.currentState!.validate()) {
-                      return;
-                    }
-
-                    setState(() {
-                      isPaymentSuccess = true;
-                    });
-
-                    if (mounted) {
-                      if (isPaymentSuccess == true) {
-                        Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => PageConfirm(
-                              personal: widget.personal,
-                              paymetMethod: selectedPayment,
-                              adress: selectedAdress,
-                              success: isPaymentSuccess,
-                            ),
-                          ),
-                          (route) => false,
-                        );
-                      } else {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => PageConfirm(
-                              personal: widget.personal,
-                              paymetMethod: selectedPayment,
-                            ),
-                          ),
-                        );
-                      }
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: kBackgroundColor,
-                    foregroundColor: Colors.black,
-                  ),
-                  child: const Text("Ödeme Yap"),
+                  child: Padding(padding: const EdgeInsets.all(12.0)),
                 ),
               ),
             ],
           ),
         ),
       ),
+      bottomNavigationBar: Container(
+        height: 80,
+        color: kBackgroundColor,
+        padding: EdgeInsets.all(16),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Column(
+              children: [
+                Center(
+                  child: Column(
+                    children: [
+                      Text(
+                        "Toplam Tutar ",
+                        style: const TextStyle(fontSize: 14),
+                      ),
+                      Text(
+                        "${NumberFormat.currency(locale: 'tr_TR', symbol: '', decimalDigits: 2).format(basket.totalPrice)} ₺",
+                        style: TextStyle(fontSize: 18),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(width: 50),
+            Expanded(
+              child: ElevatedButton(
+                onPressed: () async {
+                  if (selectedAdress == null && selectedPayment == null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        backgroundColor: Colors.red,
+                        content: Text("Lütfen adres ve ödeme yöntemi seçin"),
+                      ),
+                    );
+                    return;
+                  } else if (selectedAdress == null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        backgroundColor: Colors.red,
+                        content: Text("Lütfen adres yöntemi seçin"),
+                      ),
+                    );
+                    return;
+                  } else if (selectedPayment == null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        backgroundColor: Colors.red,
+                        content: Text("Lütfen ödeme yöntemi seçin"),
+                      ),
+                    );
+                    return;
+                  }
+                  if (selectedPayment == "Kredi Kartı" &&
+                      !_formKey.currentState!.validate()) {
+                    return;
+                  }
+
+                  setState(() {
+                    isPaymentSuccess = true;
+                  });
+
+                  if (mounted) {
+                    if (isPaymentSuccess == true) {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => PageConfirm(
+                            personal: widget.personal,
+                            paymetMethod: selectedPayment,
+                            adress: selectedAdress,
+                            success: isPaymentSuccess,
+                          ),
+                        ),
+                        (route) => false,
+                      );
+                    } else {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => PageConfirm(
+                            personal: widget.personal,
+                            paymetMethod: selectedPayment,
+                          ),
+                        ),
+                      );
+                    }
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: kBlackColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadiusGeometry.zero,
+                  ),
+                ),
+                child: const Text("Ödeme Yap"),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
 
-class _cardNumberFormatter extends TextInputFormatter {
+class _CardNumberFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(
     TextEditingValue oldValue,
@@ -612,7 +606,7 @@ class _cardNumberFormatter extends TextInputFormatter {
   }
 }
 
-class _threeDigitInputFormatter extends TextInputFormatter {
+class _ThreeDigitInputFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(
     TextEditingValue oldValue,
