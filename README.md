@@ -1,5 +1,5 @@
 <p align="right">
-  <a href="#tr">🇹🇷 Türkçe</a> | <a href="#en">🇬🇧 English</a>
+  <a href="#tr">🇹🇷 Türkçe</a> | <a href="#en">EN English</a>
 </p>
 
 ---
@@ -15,7 +15,7 @@ Desteklerinden dolayı <a href="https://github.com/BayramYARIM" target="_blank">
 
 ---
 
-## <a name="en"></a>🇬🇧 English
+## <a name="en"></aEN English
 
 # Book App
 
