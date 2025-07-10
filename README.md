@@ -1,5 +1,5 @@
 <p align="right">
-  <a href="#tr">🇹🇷 Türkçe</a> | <a href="#en">EN English</a>
+  <a href="#tr">🇹🇷 Türkçe</a> | <a href="#en">🇬🇧 English</a>
 </p>
 
 ---
@@ -15,7 +15,7 @@ Desteklerinden dolayı <a href="https://github.com/BayramYARIM" target="_blank">
 
 ---
 
-## <a name="en"></aEN English
+## <a name="en"></a>🇬🇧 English
 
 # Book App
 
@@ -23,4 +23,3 @@ This project was developed during my internship at Butkon Asansör for learning 
 It may have some shortcomings.
 
 Special thanks to <a href="https://github.com/BayramYARIM" target="_blank">Bayram YARIM</a> for his support.
-
