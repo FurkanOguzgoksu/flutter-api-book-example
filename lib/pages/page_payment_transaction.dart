@@ -21,23 +21,23 @@ class _PagePaymentTransactionState extends State<PagePaymentTransaction> {
   final TextEditingController cvvController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   List<Map<String, String>> savedAddress = [];
-  String? selectedAdress;
+  String? selectedAddress;
   String? selectedPayment;
-  bool showTextField = false;
-  bool showCreditCard = false;
-  bool isPaymentSuccess = false;
-  int month = 1;
+  int month = 7;
   int year = 2025;
 
   @override
   void initState() {
     super.initState();
-    savedAddress = myAddres;
+    savedAddress = myAddres; // Kayıtlı adresler
   }
 
   @override
   Widget build(BuildContext context) {
     final basket = Provider.of<BasketProvider>(context);
+    final now = DateTime.now();
+    final currentYear = now.year;
+    final currentMonth = now.month;
 
     return Scaffold(
       appBar: AppBar(
@@ -58,509 +58,475 @@ class _PagePaymentTransactionState extends State<PagePaymentTransaction> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Card(
-                margin: const EdgeInsets.only(bottom: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
+              _buildAddressCard(context),
+              _buildPaymentMethodCard(context, currentYear, currentMonth),
+              _buildBasketItemsCard(basket),
+            ],
+          ),
+        ),
+      ),
+      bottomNavigationBar: _buildBottomBar(
+        context,
+        basket,
+        currentYear,
+        currentMonth,
+      ),
+    );
+  }
+
+  Widget _buildAddressCard(BuildContext context) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 16),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                const Icon(Icons.location_on, size: 30, color: Colors.red),
+                const SizedBox(width: 8),
+                const Text(
+                  "Teslimat Adresim",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.location_on,
-                            size: 30,
-                            color: Colors.red,
-                          ),
-                          const SizedBox(width: 8),
-                          const Text(
-                            "Teslimat Adresim",
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const Spacer(),
-                          ElevatedButton(
-                            onPressed: () {
-                              if (savedAddress.isNotEmpty) {
-                                showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return AlertDialog(
-                                      title: Row(
-                                        children: [
-                                          const Text("Kayıtlı Adreslerim"),
-                                          const Spacer(),
-                                          IconButton(
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      PageMyAddresses(),
-                                                ),
-                                              );
-                                            },
-                                            icon: Icon(Icons.add_home_work),
-                                          ),
-                                        ],
-                                      ),
-                                      content: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: savedAddress.map((adress) {
-                                          return RadioListTile<String>(
-                                            title: Text(adress["title"]!),
-                                            subtitle: Text(adress["addres"]!),
-                                            value: adress["addres"]!,
-                                            groupValue: selectedAdress,
-                                            onChanged: (value) {
-                                              setState(() {
-                                                selectedAdress = value;
-                                              });
-                                              Navigator.of(context).pop();
-                                            },
-                                          );
-                                        }).toList(),
-                                      ),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () =>
-                                              Navigator.of(context).pop(),
-                                          child: const Text("Kapat"),
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
-                              } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text("Kayıtlı adres bulunamadı."),
-                                    backgroundColor: Colors.red,
-                                  ),
-                                );
-                              }
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: kBackgroundColor,
-                              foregroundColor: kBlackColor,
-                            ),
-                            child: const Text("Adres Seç"),
-                          ),
-                        ],
-                      ),
-                      const Divider(thickness: 1.5),
-                      Text(
-                        selectedAdress != null
-                            ? selectedAdress.toString()
-                            : "Lütfen adres seçiniz!",
-                        style: TextStyle(fontSize: 18),
-                      ),
-                    ],
+                const Spacer(),
+                ElevatedButton(
+                  onPressed: () => _showAddressDialog(context),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: kBackgroundColor,
+                    foregroundColor: kBlackColor,
                   ),
+                  child: const Text("Adres Seç"),
                 ),
+              ],
+            ),
+            const Divider(thickness: 1.5),
+            Text(
+              selectedAddress ?? "Lütfen adres seçiniz!",
+              style: const TextStyle(fontSize: 16),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPaymentMethodCard(
+    BuildContext context,
+    int currentYear,
+    int currentMonth,
+  ) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 16),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: const [
+                Icon(Icons.attach_money, size: 30, color: Colors.green),
+                SizedBox(width: 8),
+                Text(
+                  "Ödeme Yöntemleri",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+            const Divider(thickness: 1.5),
+            RadioListTile<String>(
+              title: const Text("Kredi Kartı"),
+              value: "Kredi Kartı",
+              groupValue: selectedPayment,
+              onChanged: (value) => setState(() => selectedPayment = value),
+            ),
+            if (selectedPayment == "Kredi Kartı")
+              _buildCreditCardForm(currentYear, currentMonth),
+            RadioListTile<String>(
+              title: const Text("Kapıda Ödeme"),
+              value: "Kapıda Ödeme",
+              groupValue: selectedPayment,
+              onChanged: (value) => setState(() => selectedPayment = value),
+            ),
+            RadioListTile<String>(
+              title: const Text("Banka Havalesi"),
+              value: "Banka Havalesi",
+              groupValue: selectedPayment,
+              onChanged: (value) => setState(() => selectedPayment = value),
+            ),
+            if (selectedPayment == "Banka Havalesi") _buildIbanList(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCreditCardForm(int currentYear, int currentMonth) {
+    return Card(
+      margin: const EdgeInsets.only(top: 10),
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              _buildTextField(
+                controller: cardNoController,
+                label: "Kart Numarası",
+                prefixIcon: Icons.credit_card,
+                validator: (value) {
+                  String cleaned = value!.replaceAll(' ', '');
+                  if (cleaned.length != 16)
+                    return "Kart numarası 16 haneli olmalı";
+                  return null;
+                },
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                  _CardNumberFormatter(),
+                ],
               ),
               const SizedBox(height: 10),
-              Card(
-                margin: const EdgeInsets.only(bottom: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.attach_money,
-                            size: 30,
-                            color: Colors.green,
-                          ),
-                          const SizedBox(width: 8),
-                          const Text(
-                            "Ödeme Yöntemleri",
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const Divider(thickness: 1.5),
-                      RadioListTile<String>(
-                        title: const Text("Kredi Kartı"),
-                        value: "Kredi Kartı",
-                        groupValue: selectedPayment,
-                        onChanged: (value) {
-                          setState(() {
-                            selectedPayment = value;
-                          });
-                        },
-                      ),
-                      if (selectedPayment == "Kredi Kartı")
-                        Card(
-                          margin: const EdgeInsets.only(top: 10),
-                          child: Padding(
-                            padding: const EdgeInsets.all(12.0),
-                            child: Form(
-                              key: _formKey,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text(
-                                    "Kredi Kartı Bilgileri",
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 10),
-                                  TextFormField(
-                                    controller: cardNoController,
-                                    decoration: const InputDecoration(
-                                      labelText: "Kart Numarası",
-                                      prefixIcon: Icon(Icons.credit_card),
-                                      border: OutlineInputBorder(),
-                                    ),
-                                    keyboardType: TextInputType.number,
-                                    inputFormatters: [
-                                      FilteringTextInputFormatter.digitsOnly,
-                                      _CardNumberFormatter(),
-                                    ],
-                                    validator: (value) =>
-                                        value == null ||
-                                            value.isEmpty ||
-                                            value.replaceAll(' ', '').length !=
-                                                16
-                                        ? "Kart numarası 16 haneli olmalı"
-                                        : null,
-                                  ),
-                                  const SizedBox(height: 10),
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: DropdownButtonFormField<int>(
-                                          decoration: const InputDecoration(
-                                            labelText: "Ay",
-                                            border: OutlineInputBorder(),
-                                          ),
-                                          value: month,
-                                          items: List.generate(
-                                            12,
-                                            (index) => DropdownMenuItem(
-                                              value: index + 1,
-                                              child: Text("${index + 1}"),
-                                            ),
-                                          ),
-                                          onChanged: (value) {
-                                            setState(() {
-                                              month = value!;
-                                            });
-                                          },
-                                        ),
-                                      ),
-                                      const SizedBox(width: 10),
-                                      Expanded(
-                                        child: DropdownButtonFormField<int>(
-                                          decoration: const InputDecoration(
-                                            labelText: "Yıl",
-                                            border: OutlineInputBorder(),
-                                          ),
-                                          value: year,
-                                          items: List.generate(
-                                            21,
-                                            (index) => DropdownMenuItem(
-                                              value: 2025 + index,
-                                              child: Text("${2025 + index}"),
-                                            ),
-                                          ),
-                                          onChanged: (value) {
-                                            setState(() {
-                                              year = value!;
-                                            });
-                                          },
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 10),
-                                  TextFormField(
-                                    controller: cvvController,
-                                    decoration: const InputDecoration(
-                                      labelText: "CVV",
-                                      prefixIcon: Icon(Icons.lock),
-                                      border: OutlineInputBorder(),
-                                    ),
-                                    keyboardType: TextInputType.number,
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return "CVV boş bırakılamaz";
-                                      } else if (value.length != 3) {
-                                        return "CVV 3 haneli olmalı";
-                                      }
-                                      return null;
-                                    },
-                                    inputFormatters: [
-                                      FilteringTextInputFormatter.digitsOnly,
-                                      _ThreeDigitInputFormatter(),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      RadioListTile<String>(
-                        title: const Text("Kapıda Ödeme"),
-                        value: "Kapıda Ödeme",
-                        groupValue: selectedPayment,
-                        onChanged: (value) {
-                          setState(() {
-                            selectedPayment = value;
-                            showCreditCard = false;
-                          });
-                        },
-                      ),
-                      RadioListTile<String>(
-                        title: const Text("Banka Havalesi"),
-                        value: "Banka Havalesi",
-                        groupValue: selectedPayment,
-                        onChanged: (value) {
-                          setState(() {
-                            selectedPayment = value;
-                            showCreditCard = false;
-                          });
-                        },
-                      ),
-                      if (selectedPayment == "Banka Havalesi") ...[
-                        const SizedBox(height: 10),
-                        Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(12.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  "Banka Hesapları (IBAN):",
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                const SizedBox(height: 10),
-
-                                ...ibanList.map((bank) {
-                                  return Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 6.0,
-                                    ),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                bank["bankName"]!,
-                                                style: const TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 15,
-                                                ),
-                                              ),
-                                              const SizedBox(height: 2),
-                                              Text(
-                                                bank["iban"]!,
-                                                style: const TextStyle(
-                                                  fontSize: 14,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                }),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ],
+              Row(
+                children: [
+                  Expanded(
+                    child: _buildMonthDropdown(currentYear, currentMonth),
                   ),
-                ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: _buildYearDropdown(currentYear, currentMonth),
+                  ),
+                ],
               ),
-              Card(
-                margin: const EdgeInsets.only(bottom: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: const [
-                          Icon(
-                            Icons.shopping_bag,
-                            size: 30,
-                            color: Colors.blue,
-                          ),
-                          SizedBox(width: 8),
-                          Text(
-                            "Teslim Edilecek Ürün/Ürünler",
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const Divider(thickness: 1.5),
-                      if (basket.basketBooks.isEmpty)
-                        const Text(
-                          "Sepetiniz boş.",
-                          style: TextStyle(fontSize: 16, color: Colors.grey),
-                        )
-                      else
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: basket.basketBooks.entries.map((entry) {
-                            final book = entry.key;
-                            final int count = entry.value;
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 6.0,
-                              ),
-                              child: Text(
-                                "- ${book.volumeInfo?.title}  ($count adet)",
-                                style: const TextStyle(fontSize: 16),
-                              ),
-                            );
-                          }).toList(),
-                        ),
-                    ],
-                  ),
-                ),
+              const SizedBox(height: 10),
+              _buildTextField(
+                controller: cvvController,
+                label: "CVV",
+                prefixIcon: Icons.lock,
+                validator: (value) {
+                  if (value!.length != 3) return "CVV 3 haneli olmalı";
+                  return null;
+                },
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                  _ThreeDigitInputFormatter(),
+                ],
               ),
             ],
           ),
         ),
       ),
-      bottomNavigationBar: Container(
-        height: 80,
-        color: kBackgroundColor,
-        padding: EdgeInsets.all(16),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+    );
+  }
+
+  Widget _buildBasketItemsCard(BasketProvider basket) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 16),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Column(
+            Row(
+              children: const [
+                Icon(Icons.shopping_bag, size: 30, color: Colors.blue),
+                SizedBox(width: 8),
+                Text(
+                  "Teslim Edilecek Ürünler",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+            const Divider(thickness: 1.5),
+            if (basket.basketBooks.isEmpty)
+              const Text(
+                "Sepetiniz boş.",
+                style: TextStyle(fontSize: 16, color: Colors.grey),
+              )
+            else
+              ...basket.basketBooks.entries.map((entry) {
+                final book = entry.key;
+                final count = entry.value;
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 6.0),
+                  child: Text(
+                    "- ${book.volumeInfo?.title} ($count adet)",
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                );
+              }).toList(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBottomBar(
+    BuildContext context,
+    BasketProvider basket,
+    int currentYear,
+    int currentMonth,
+  ) {
+    return Container(
+      height: 80,
+      color: kBackgroundColor,
+      padding: const EdgeInsets.all(16),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Center(
-                  child: Column(
-                    children: [
-                      Text(
-                        "Toplam Tutar ",
-                        style: const TextStyle(fontSize: 14),
-                      ),
-                      Text(
-                        "${NumberFormat.currency(locale: 'tr_TR', symbol: '', decimalDigits: 2).format(basket.totalPrice)} ₺",
-                        style: TextStyle(fontSize: 18),
-                      ),
-                    ],
+                const Text("Toplam Tutar", style: TextStyle(fontSize: 14)),
+                Text(
+                  "${NumberFormat.currency(locale: 'tr_TR', symbol: '', decimalDigits: 2).format(basket.totalPrice)} ₺",
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ],
             ),
-            const SizedBox(width: 50),
-            Expanded(
-              child: ElevatedButton(
-                onPressed: () async {
-                  if (selectedAdress == null && selectedPayment == null) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        backgroundColor: Colors.red,
-                        content: Text("Lütfen adres ve ödeme yöntemi seçin"),
-                      ),
-                    );
-                    return;
-                  } else if (selectedAdress == null) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        backgroundColor: Colors.red,
-                        content: Text("Lütfen adres yöntemi seçin"),
-                      ),
-                    );
-                    return;
-                  } else if (selectedPayment == null) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        backgroundColor: Colors.red,
-                        content: Text("Lütfen ödeme yöntemi seçin"),
-                      ),
-                    );
-                    return;
-                  }
-                  if (selectedPayment == "Kredi Kartı" &&
-                      !_formKey.currentState!.validate()) {
-                    return;
-                  }
-
-                  setState(() {
-                    isPaymentSuccess = true;
-                  });
-
-                  if (mounted) {
-                    if (isPaymentSuccess == true) {
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => PageConfirm(
-                            personal: widget.personal,
-                            paymetMethod: selectedPayment,
-                            adress: selectedAdress,
-                            success: isPaymentSuccess,
-                          ),
-                        ),
-                        (route) => false,
-                      );
-                    } else {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => PageConfirm(
-                            personal: widget.personal,
-                            paymetMethod: selectedPayment,
-                          ),
-                        ),
-                      );
-                    }
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: kBlackColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadiusGeometry.zero,
-                  ),
+          ),
+          Expanded(
+            child: ElevatedButton(
+              onPressed: () =>
+                  _confirmPayment(context, currentYear, currentMonth),
+              style: ElevatedButton.styleFrom(
+                foregroundColor: kBlackColor,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.zero,
                 ),
-                child: const Text("Ödeme Yap"),
+              ),
+              child: const Text("Ödeme Yap"),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _confirmPayment(
+    BuildContext context,
+    int currentYear,
+    int currentMonth,
+  ) {
+    if ((selectedAddress?.isEmpty ?? true) ||
+        (selectedPayment?.isEmpty ?? true)) {
+      _showSnack("Lütfen adres ve ödeme yöntemi seçiniz");
+      return;
+    }
+    if (selectedPayment == "Kredi Kartı" &&
+        _formKey.currentState != null &&
+        !_formKey.currentState!.validate()) {
+      return;
+    }
+    if (year == currentYear && month < currentMonth) {
+      _showSnack("Geçmiş bir tarih seçilemez!");
+      return;
+    }
+
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PageConfirm(
+          personal: widget.personal,
+          paymetMethod: selectedPayment,
+          adress: selectedAddress,
+          success: true,
+        ),
+      ),
+      (route) => false,
+    );
+  }
+
+  void _showSnack(String msg) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(msg),
+        backgroundColor: Colors.red,
+        duration: const Duration(seconds: 2),
+      ),
+    );
+  }
+
+  void _showAddressDialog(BuildContext context) {
+    if (savedAddress.isEmpty) {
+      _showSnack("Kayıtlı adres bulunamadı.");
+      return;
+    }
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Row(
+          children: [
+            Text("Kayıtlı Adreslerim"),
+            Spacer(),
+            GestureDetector(
+              onLongPress: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text("Adres Ekle"),
+                    duration: Duration(seconds: 2),
+                  ),
+                );
+              },
+              child: IconButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => PageMyAddresses()),
+                  );
+                },
+                icon: Icon(Icons.add_home_work),
               ),
             ),
           ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: savedAddress.map((address) {
+            return RadioListTile<String>(
+              title: Text(address["title"]!),
+              subtitle: Text(address["addres"]!),
+              value: address["addres"]!,
+              groupValue: selectedAddress,
+              onChanged: (value) {
+                setState(() {
+                  selectedAddress = value;
+                });
+                Navigator.of(context).pop();
+              },
+            );
+          }).toList(),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String label,
+    required IconData prefixIcon,
+    String? Function(String?)? validator,
+    List<TextInputFormatter>? inputFormatters,
+  }) {
+    return TextFormField(
+      controller: controller,
+      decoration: InputDecoration(
+        labelText: label,
+        prefixIcon: Icon(prefixIcon),
+        border: const OutlineInputBorder(),
+      ),
+      validator: validator,
+      keyboardType: TextInputType.number,
+      inputFormatters: inputFormatters,
+    );
+  }
+
+  Widget _buildMonthDropdown(int currentYear, int currentMonth) {
+    return DropdownButtonFormField<int>(
+      decoration: const InputDecoration(
+        labelText: "Ay",
+        border: OutlineInputBorder(),
+      ),
+      value: month,
+      items: List.generate(12, (index) {
+        int monthValue = index + 1;
+        bool isDisabled = (year == currentYear && monthValue < currentMonth);
+        return DropdownMenuItem<int>(
+          value: isDisabled ? null : monthValue,
+          enabled: !isDisabled,
+          child: Text(
+            "${monthValue.toString().padLeft(2, '0')} ",
+            style: TextStyle(color: isDisabled ? Colors.grey : Colors.black),
+          ),
+        );
+      }),
+      onChanged: (value) {
+        if (value != null) {
+          setState(() {
+            month = value;
+          });
+        }
+      },
+    );
+  }
+
+  Widget _buildYearDropdown(int currentYear, int currentMonth) {
+    return DropdownButtonFormField<int>(
+      decoration: const InputDecoration(
+        labelText: "Yıl",
+        border: OutlineInputBorder(),
+      ),
+      value: year,
+      items: List.generate(
+        21,
+        (index) => DropdownMenuItem(
+          value: currentYear + index,
+          child: Text("${currentYear + index}"),
+        ),
+      ),
+      onChanged: (value) {
+        setState(() {
+          year = value!;
+          if (year == currentYear && month < currentMonth) {
+            _showSnack("Geçmiş bir ay seçilemez!");
+            month = currentMonth;
+          }
+        });
+      },
+    );
+  }
+
+  Widget _buildIbanList() {
+    return Card(
+      margin: const EdgeInsets.only(top: 10),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: ibanList.map((bank) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 6.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          bank["bankName"]!,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          bank["iban"]!,
+                          style: const TextStyle(fontSize: 14),
+                        ),
+                      ],
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.copy),
+                    onPressed: () {
+                      Clipboard.setData(ClipboardData(text: bank["iban"]!));
+                      _showSnack("IBAN kopyalandı!");
+                    },
+                  ),
+                ],
+              ),
+            );
+          }).toList(),
         ),
       ),
     );
@@ -573,23 +539,13 @@ class _CardNumberFormatter extends TextInputFormatter {
     TextEditingValue oldValue,
     TextEditingValue newValue,
   ) {
-    // Sadece rakamları al
     String digitsOnly = newValue.text.replaceAll(RegExp(r'[^0-9]'), '');
-
-    // En fazla 16 rakam olsun
-    if (digitsOnly.length > 16) {
-      digitsOnly = digitsOnly.substring(0, 16);
-    }
-
-    // 4’erli gruplara ayır
+    if (digitsOnly.length > 16) digitsOnly = digitsOnly.substring(0, 16);
     String newText = '';
     for (int i = 0; i < digitsOnly.length; i++) {
-      if (i != 0 && i % 4 == 0) {
-        newText += ' '; // her 4 karakterde bir boşluk
-      }
+      if (i != 0 && i % 4 == 0) newText += ' ';
       newText += digitsOnly[i];
     }
-
     return TextEditingValue(
       text: newText,
       selection: TextSelection.collapsed(offset: newText.length),
@@ -603,15 +559,9 @@ class _ThreeDigitInputFormatter extends TextInputFormatter {
     TextEditingValue oldValue,
     TextEditingValue newValue,
   ) {
-    if (newValue.text.length < 4) {
+    if (newValue.text.length <= 3) {
       return newValue;
     }
     return oldValue;
   }
 }
-
-final List<Map<String, String>> ibanList = [
-  {"bankName": "Ziraat Bankası", "iban": "TR11 1111 1111 1111 1111 1111 11"},
-  {"bankName": "Kuveyt Türk", "iban": "TR22 2222 2222 2222 2222 2222 22"},
-  {"bankName": "Vakıfbank", "iban": "TR33 3333 3333 3333 3333 3333 33"},
-];
