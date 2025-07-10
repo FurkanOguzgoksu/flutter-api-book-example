@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:film_app/features_book/features_book.dart';
 import 'package:film_app/features_book/features_page_info.dart';
@@ -38,21 +39,24 @@ class _PageHomeState extends State<PageHome> {
   PageInfo? pageInfo;
   bool _isConnected = true;
   int currentPage = 1;
+  int currentIndex = 0;
 
   @override
   void initState() {
     super.initState();
-    _checkConnection(); // İnternet var mı yok mu kontrol eder
-    _loadData(); // Sayfalama için veri hazırlar
+    _checkConnection(); // Başlangıçta kontrol et
+    _loadData(); // Sayfa yüklenirken veri çek
     bookFuture = _getBooks();
-    _subscription = Connectivity().onConnectivityChanged.listen((_) {
-      _checkConnection();
-    });
 
-    // Connectivity() ➜ Flutter’ın bağlantı izleme sınıfı (bir nevi trafik polisi).
-    // onConnectivityChanged ➜ Bağlantı durumunu dinleyen akış (stream).
-    // listen((_) { ... }) ➜ Her değişiklikte bir şey yap demek.
-    // _checkConnection() ➜ Bu fonksiyonu her seferinde çağır (bağlantı hâlâ var mı diye bak).
+    _subscription = Connectivity().onConnectivityChanged.listen((result) async {
+      await _checkConnection();
+
+      if (_isConnected) {
+        setState(() {
+          bookFuture = _getBooks();
+        });
+      }
+    });
   }
 
   @override
@@ -64,14 +68,15 @@ class _PageHomeState extends State<PageHome> {
 
   Future<void> _checkConnection() async {
     try {
-      final result = await InternetAddress.lookup('google.com');
+      final result = await InternetAddress.lookup(
+        'google.com',
+      ).timeout(Duration(seconds: 3)); // max 3 saniye bekle
       bool connected = result.isNotEmpty && result[0].rawAddress.isNotEmpty;
 
       if (mounted && connected != _isConnected) {
         setState(() {
           _isConnected = connected;
         });
-
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
@@ -80,17 +85,22 @@ class _PageHomeState extends State<PageHome> {
           ),
         );
       }
-    } catch (_) {
-      if (_isConnected) {
-        setState(() {
-          _isConnected = false;
-        });
+    } on TimeoutException {
+      _handleNoConnection();
+    } on SocketException {
+      _handleNoConnection();
+    }
+  }
 
-        if (!mounted) return;
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('Bağlantı kesildi')));
-      }
+  void _handleNoConnection() {
+    if (_isConnected) {
+      setState(() {
+        _isConnected = false;
+      });
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Bağlantı kesildi')));
     }
   }
 
@@ -105,11 +115,14 @@ class _PageHomeState extends State<PageHome> {
     await _checkConnection();
 
     if (!_isConnected) {
-      throw Exception("İnternet bağlantısı yok");
+      return []; // Boş liste döndür
     }
 
     try {
-      var values = await HttpService.fetchBooks(currentPage);
+      var values = await HttpService.fetchBooks(
+        currentPage,
+      ).timeout(Duration(seconds: 5));
+
       setState(() {
         pageInfo = values.pageInfo;
         allBooks = values.books;
@@ -124,6 +137,7 @@ class _PageHomeState extends State<PageHome> {
   @override
   Widget build(BuildContext context) {
     final favorite = Provider.of<FavoriteProvider>(context);
+
     return Scaffold(
       backgroundColor: Colors.grey[300],
       appBar: AppBar(
@@ -184,17 +198,16 @@ class _PageHomeState extends State<PageHome> {
             icon: Icon(Icons.logout, color: kTextWhiteColor),
           ),
         ],
-      ),
-      drawer: DrawerMenu(personal: widget.personal),
-      body: Column(
-        children: [
-          Padding(
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(60),
+          child: Padding(
             padding: const EdgeInsets.all(10.0),
             child: TextField(
               controller: searchContreller,
               decoration: InputDecoration(
-                hintText: "Kitap ara..",
-                prefixIcon: Icon(Icons.search, color: Colors.green),
+                hintText: "Kitap ara...",
+                hintStyle: TextStyle(color: kBlackColor),
+                prefixIcon: Icon(Icons.search),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12.0),
                 ),
@@ -206,105 +219,276 @@ class _PageHomeState extends State<PageHome> {
                     final subTitle =
                         book.volumeInfo?.subTitle?.toLowerCase() ?? '';
                     final query = input.toLowerCase();
-
                     return title.contains(query) || subTitle.contains(query);
                   }).toList();
                 });
               },
             ),
           ),
+        ),
+      ),
+      drawer: DrawerMenu(personal: widget.personal),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              FirstBanner(isConnected: _isConnected, personal: widget.personal),
+              CarouselSlider.builder(
+                itemCount: allBooks.length >= 10 ? 10 : allBooks.length,
+                itemBuilder: (context, index, realIndex) {
+                  final book = allBooks[index];
+                  final title = book.volumeInfo?.title ?? "Kitap Adı";
+                  final authors =
+                      book.volumeInfo?.authors?.join(", ") ?? "Yazar Bilgisi";
+                  final imageUrl =
+                      book.volumeInfo?.imageLinks?.thumbnail ??
+                      "Resim bulunmadı ";
+                  final price = "${book.price ?? 1.00}₺";
 
-          FirstBanner(isConnected: _isConnected, personal: widget.personal),
-          Expanded(
-            child: FutureBuilder<List<Book>>(
-              future: bookFuture,
-              builder: (context, snapshot) {
-                // ConnectionState bir enum'dur ve bu Future’ın veya Stream’in şu anda hangi durumda olduğunu belirtir.
-                // waiting -> hala veri gelmedi bekliyoruz...
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-
-                if (snapshot.hasError) {
-                  return Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(
-                          Icons.wifi_off,
-                          size: 64,
-                          color: Colors.grey,
-                        ),
-                        const SizedBox(height: 16),
-                        Text(
-                          snapshot.error.toString().contains(
-                                "Failed host lookup",
-                              )
-                              ? "İnternet bağlantısı yok"
-                              : "Bir hata oluştu: ${snapshot.error}",
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(fontSize: 16),
-                        ),
-                        const SizedBox(height: 16),
-                        ElevatedButton(
-                          onPressed: () {
-                            setState(() {
-                              bookFuture = _getBooks();
-                            });
-                          },
-                          child: const Text("Yeniden Dene"),
-                        ),
-                      ],
-                    ),
-                  );
-                }
-
-                if (snapshot.hasData) {
-                  var orientation = MediaQuery.of(context).orientation;
-
-                  return GridView.builder(
-                    padding: const EdgeInsets.all(8),
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: orientation == Orientation.portrait
-                          ? 2
-                          : 3,
-                      childAspectRatio: 0.45,
-                    ),
-                    itemCount: filteredBooks.length,
-                    itemBuilder: (context, index) {
-                      var book = filteredBooks[index];
-                      return Center(
-                        child: CardGridBook(
-                          fetchedbook: book,
-                          fClick: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    PageBook(fetchedBook: book),
-                              ),
-                            );
-                          },
-                          isFavorited: favorite.isFavorite(book),
-                          onFavorite: () {
-                            setState(() {
-                              if (favorite.favoriteBooks.contains(book)) {
-                                favorite.toggleBookFavorite(book);
-                              } else {
-                                favorite.toggleBookFavorite(book);
-                              }
-                            });
-                          },
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => PageBook(fetchedBook: book),
                         ),
                       );
                     },
+                    child: Container(
+                      padding: EdgeInsets.all(8),
+                      margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                      decoration: BoxDecoration(
+                        color: Colors.green[300],
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(
+                        children: [
+                          Image.network(
+                            imageUrl,
+                            fit: BoxFit.cover,
+                            loadingBuilder: (context, child, progress) {
+                              if (progress == null) return child;
+                              return Container(
+                                width: 80,
+                                height: 100,
+                                alignment: Alignment.center,
+                                child: CircularProgressIndicator(),
+                              );
+                            },
+                            errorBuilder: (context, error, stackTrace) {
+                              return Image.asset(
+                                "images/book.png",
+                                width: 80,
+                                height: 100,
+                                fit: BoxFit.cover,
+                              );
+                            },
+                          ),
+                          SizedBox(width: 10),
+                          Expanded(
+                            child: Column(
+                              children: [
+                                Text(
+                                  title,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  maxLines: 3,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                SizedBox(height: 5),
+                                Text(
+                                  authors,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey[700],
+                                  ),
+                                  maxLines: 3,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                SizedBox(height: 5),
+                                Text(
+                                  "$price ",
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.green[800],
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   );
-                }
-                return const Center(child: Text('Bir hata oluştu...'));
-              },
-            ),
+                },
+                options: CarouselOptions(
+                  height: 200,
+                  autoPlay: true,
+                  enlargeCenterPage: true,
+                  viewportFraction: 0.8,
+                  onPageChanged: (index, reason) {
+                    setState(() {
+                      currentIndex = index;
+                    });
+                  },
+                ),
+              ),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(
+                  allBooks.length >= 10 ? 10 : allBooks.length,
+                  (index) => Container(
+                    width: 8,
+                    height: 8,
+                    margin: EdgeInsets.symmetric(horizontal: 3, vertical: 8),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: currentIndex == index
+                          ? Colors.green
+                          : Colors.grey[400],
+                    ),
+                  ),
+                ),
+              ),
+
+              if (_isConnected == true) ...[
+                Container(
+                  height: 120,
+                  margin: EdgeInsets.symmetric(vertical: 10),
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: bookCategories.length,
+                    itemBuilder: (context, index) {
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            margin: EdgeInsets.symmetric(horizontal: 8),
+                            width: 80,
+                            height: 80,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.grey[200],
+                              border: Border.all(width: 2),
+                            ),
+                            child: Icon(
+                              bookCategories[index]['icon'],
+                              size: 40,
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            bookCategories[index]['title'],
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                ),
+              ],
+              FutureBuilder<List<Book>>(
+                future: bookFuture,
+                builder: (context, snapshot) {
+                  if (!_isConnected) {
+                    return Center(
+                      child: Text(
+                        "İnternet bağlantısı yok",
+                        style: TextStyle(color: Colors.red, fontSize: 18),
+                      ),
+                    );
+                  }
+
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  if (snapshot.hasError) {
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(
+                            Icons.wifi_off,
+                            size: 64,
+                            color: Colors.grey,
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            "İnternet bağlantısı yok. Lütfen bağlantınızı kontrol edin.",
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              color: Colors.red,
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          ElevatedButton(
+                            onPressed: () {
+                              setState(() {
+                                bookFuture = _getBooks();
+                              });
+                            },
+                            child: const Text("Yeniden Dene"),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+
+                  if (snapshot.hasData) {
+                    var orientation = MediaQuery.of(context).orientation;
+                    return GridView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      padding: const EdgeInsets.all(8),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: orientation == Orientation.portrait
+                            ? 2
+                            : 3,
+                        childAspectRatio: 0.45,
+                      ),
+                      itemCount: filteredBooks.length,
+                      itemBuilder: (context, index) {
+                        var book = filteredBooks[index];
+                        return Center(
+                          child: CardGridBook(
+                            fetchedbook: book,
+                            fClick: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      PageBook(fetchedBook: book),
+                                ),
+                              );
+                            },
+                            isFavorited: favorite.isFavorite(book),
+                            onFavorite: () {
+                              setState(() {
+                                favorite.toggleBookFavorite(book);
+                              });
+                            },
+                          ),
+                        );
+                      },
+                    );
+                  }
+                  return const Center(child: Text('Bir hata oluştu...'));
+                },
+              ),
+            ],
           ),
-        ],
+        ),
       ),
       bottomNavigationBar: Container(
         color: kBackgroundColor,
