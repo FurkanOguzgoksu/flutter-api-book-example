@@ -82,10 +82,7 @@ class _PageSignUpState extends State<PageSignUp> {
                       color: Color(0xFF1E88E5),
                     ),
                   ),
-                  IconButton(
-                    onPressed: () {},
-                    icon: Icon(Icons.security, color: Color(0xFF1E88E5)),
-                  ),
+                  Icon(Icons.security, color: Color(0xFF1E88E5)),
                 ],
               ),
 
