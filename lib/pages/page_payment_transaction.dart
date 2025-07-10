@@ -457,15 +457,6 @@ class _PagePaymentTransactionState extends State<PagePaymentTransaction> {
                   ),
                 ),
               ),
-              Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: Padding(padding: const EdgeInsets.all(12.0)),
-                ),
-              ),
             ],
           ),
         ),
