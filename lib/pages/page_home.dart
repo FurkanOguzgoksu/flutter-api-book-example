@@ -149,52 +149,51 @@ class _PageHomeState extends State<PageHome> {
         backgroundColor: kBackgroundColor,
         title: const Text("AnaSayfa"),
         actions: [
-          PopupMenuButton(
-            icon: Icon(Icons.person, color: kTextWhiteColor),
-            itemBuilder: (context) => [
-              PopupMenuItem(
-                value: 1,
-                child: Row(
-                  children: [
-                    Icon(Icons.favorite),
-                    const SizedBox(width: 15),
-                    Text("Favorilerim"),
-                  ],
-                ),
+          Row(
+            children: [
+              Stack(
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              PageShoppingBasket(personal: widget.personal),
+                        ),
+                      );
+                    },
+                    icon: Icon(
+                      Icons.shopping_cart_checkout,
+                      color: kTextWhiteColor,
+                    ),
+                  ),
+                  Positioned(right: 20, top: 25, child: Text("1")),
+                ],
               ),
-              PopupMenuItem(
-                value: 2,
-                child: Row(
-                  children: [
-                    Icon(Icons.shopping_cart_checkout),
-                    const SizedBox(width: 15),
-                    Text("Sepetim"),
-                  ],
-                ),
+              Stack(
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => PageFavorite()),
+                      );
+                    },
+                    icon: Icon(Icons.favorite, color: kTextWhiteColor),
+                  ),
+                  Positioned(right: 20, top: 25, child: Text("1")),
+                ],
               ),
             ],
-            onSelected: (value) {
-              if (value == 1) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => PageFavorite()),
-                );
-              } else if (value == 2) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        PageShoppingBasket(personal: widget.personal),
-                  ),
-                );
-              }
-            },
           ),
+
           IconButton(
             onPressed: () async {
               final prefs = await SharedPreferences.getInstance();
               prefs.clear();
 
+              if (!context.mounted) return;
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (context) => LogInPage()),
@@ -206,28 +205,31 @@ class _PageHomeState extends State<PageHome> {
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(60),
           child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: TextField(
-              controller: searchContreller,
-              decoration: InputDecoration(
-                hintText: "Kitap ara...",
-                hintStyle: TextStyle(color: kBlackColor),
-                prefixIcon: Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12.0),
+            padding: const EdgeInsets.all(8.0),
+            child: Card(
+              color: Colors.white,
+              child: TextField(
+                controller: searchContreller,
+                decoration: InputDecoration(
+                  hintText: "Kitap ara...",
+                  hintStyle: TextStyle(color: kBlackColor),
+                  prefixIcon: Icon(Icons.search),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12.0),
+                  ),
                 ),
+                onChanged: (input) {
+                  setState(() {
+                    filteredBooks = allBooks.where((book) {
+                      final title = book.volumeInfo?.title?.toLowerCase() ?? '';
+                      final subTitle =
+                          book.volumeInfo?.subTitle?.toLowerCase() ?? '';
+                      final query = input.toLowerCase();
+                      return title.contains(query) || subTitle.contains(query);
+                    }).toList();
+                  });
+                },
               ),
-              onChanged: (input) {
-                setState(() {
-                  filteredBooks = allBooks.where((book) {
-                    final title = book.volumeInfo?.title?.toLowerCase() ?? '';
-                    final subTitle =
-                        book.volumeInfo?.subTitle?.toLowerCase() ?? '';
-                    final query = input.toLowerCase();
-                    return title.contains(query) || subTitle.contains(query);
-                  }).toList();
-                });
-              },
             ),
           ),
         ),
@@ -273,9 +275,10 @@ class _PageHomeState extends State<PageHome> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               SizedBox(
-                                height: 165,
+                                height: 155,
                                 child: Image.network(
                                   imageUrl,
                                   fit: BoxFit.cover,
@@ -291,8 +294,7 @@ class _PageHomeState extends State<PageHome> {
                                   errorBuilder: (context, error, stackTrace) {
                                     return Image.asset(
                                       "images/book.png",
-                                      width: 80,
-                                      height: 100,
+                                      height: 160,
                                       fit: BoxFit.cover,
                                     );
                                   },
@@ -304,6 +306,7 @@ class _PageHomeState extends State<PageHome> {
                           Expanded(
                             child: Column(
                               children: [
+                                SizedBox(height: 20),
                                 Text(
                                   title,
                                   style: TextStyle(
