@@ -183,16 +183,19 @@ class _PagePaymentTransactionState extends State<PagePaymentTransaction> {
                                 );
                               },
                               child: IconButton(
-                                onPressed: () {
+                                onPressed: () async {
                                   Navigator.of(context).pop();
-                                  Navigator.push(
+                                  await Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) => PageMyAddresses(),
                                     ),
                                   );
-                                  selectedAddress = "";
+                                  setState(() {
+                                    _checkSelectedAddressValidity();
+                                  });
                                 },
+
                                 icon: Icon(Icons.add_home_work),
                               ),
                             ),
@@ -200,7 +203,7 @@ class _PagePaymentTransactionState extends State<PagePaymentTransaction> {
                         ),
                         content: Column(
                           mainAxisSize: MainAxisSize.min,
-                          children: savedAddress.map((address) {
+                          children: myAddres.map((address) {
                             return RadioListTile<String>(
                               title: Text(address["title"]!),
                               subtitle: Text(address["addres"]!),
@@ -442,6 +445,12 @@ class _PagePaymentTransactionState extends State<PagePaymentTransaction> {
         ),
       ),
     );
+  }
+
+  void _checkSelectedAddressValidity() {
+    if (!myAddres.any((addr) => addr['addres'] == selectedAddress)) {
+      selectedAddress = null;
+    }
   }
 
   void _showSnack(String msg, Color clr) {
