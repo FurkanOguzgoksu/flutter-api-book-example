@@ -48,6 +48,11 @@ class _PageHomeState extends State<PageHome> {
     _loadData(); // Sayfa yüklenirken veri çek
     bookFuture = _getBooks();
 
+    // Connectivity() ➜ Flutter’ın bağlantı izleme sınıfı (bir nevi trafik polisi).
+    // onConnectivityChanged ➜ Bağlantı durumunu dinleyen akış (stream).
+    // listen((_) { ... }) ➜ Her değişiklikte bir şey yap demek.
+    // _checkConnection() ➜ Bu fonksiyonu her seferinde çağır (bağlantı hâlâ var mı diye bak).
+
     _subscription = Connectivity().onConnectivityChanged.listen((result) async {
       await _checkConnection();
 
@@ -115,7 +120,7 @@ class _PageHomeState extends State<PageHome> {
     await _checkConnection();
 
     if (!_isConnected) {
-      return []; // Boş liste döndür
+      return [];
     }
 
     try {
