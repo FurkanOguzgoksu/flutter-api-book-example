@@ -1,4 +1,4 @@
-import 'package:film_app/main.dart';
+import 'package:film_app/provider/provider_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
