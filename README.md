@@ -7,9 +7,11 @@
 ---
 
 ### 📖 Hakkında
-Bu proje, **Butkon Asansör**'de yaptığım staj süresince öğrenme amacıyla geliştirilmiştir. 4 hafta boyunca mobil uygulama geliştirme ve Flutter teknolojileri üzerine yoğunlaştım. Eksiklikleri muhakkak vardır ancak bu süreç benim için çok değerli bir öğrenme deneyimiydi.
+  Bu proje, **Butkon Asansör**'de yaptığım staj süresince öğrenme amacıyla geliştirilmiştir. 4 hafta boyunca mobil uygulama geliştirme ve Flutter teknolojileri üzerine yoğunlaştım. Eksiklikleri muhakkak vardır ancak bu süreç benim için çok değerli bir öğrenme deneyimiydi. 
 
-Desteklerinden dolayı <a href="https://github.com/BayramYARIM" target="_blank" rel="noopener noreferrer"> **Bayram YARIM** </a>’a teşekkür ederim.
+  Desteklerinden dolayı <a href="https://github.com/BayramYARIM" target="_blank" rel="noopener noreferrer">**Bayram YARIM**</a>’a teşekkür ederim.
+
+  👇🏻 Aşağıda Book App’in kullanıcı arayüzüne ait detaylı ekran görüntüleri mevcuttur.
 
 ---
 
@@ -23,35 +25,35 @@ Desteklerinden dolayı <a href="https://github.com/BayramYARIM" target="_blank" 
 
 ### 📸 Ekran Görüntüleri
 
-#### 📕 Ana Sayfa
-![Ana Sayfa](screenshots/Screenshot_20250711_153726.jpg)
+#### 🔑 Giriş Yap & 📝 Kayıt Ol
+<p align="center">
+  <img src="screenshots/Screenshot_20250711_153219.jpg" alt="Giriş Yap" width="250" style="margin-right: 15px;"/>
+  <img src="screenshots/Screenshot_20250711_153606.jpg" alt="Kayıt Ol" width="250"/>
+</p>
 
-#### 📖 Kitap Detay Sayfası
-![Kitap Detay](screenshots/Screenshot_20250711_153820.jpg)
+#### 📕 Ana Sayfa & 📖 Kitap Detay Sayfası
+<p align="center">
+  <img src="screenshots/Screenshot_20250711_153726.jpg" alt="Ana Sayfa" width="250" style="margin-right: 15px;"/>
+  <img src="screenshots/Screenshot_20250711_153820.jpg" alt="Kitap Detay" width="250"/>
+</p>
 
-#### 👤 Kişisel Bilgiler
-![Kişisel Bilgiler](screenshots/Screenshot_20250711_153900.jpg)
+#### 👤 Kişisel Bilgiler & 📍 Adreslerim
+<p align="center">
+  <img src="screenshots/Screenshot_20250711_153900.jpg" alt="Kişisel Bilgiler" width="250" style="margin-right: 15px;"/>
+  <img src="screenshots/Screenshot_20250711_153910.jpg" alt="Adreslerim" width="250"/>
+</p>
 
-#### 📍 Adreslerim
-![Adreslerim](screenshots/Screenshot_20250711_153910.jpg)
+#### ❤️ Favorilerim & 🛒 Sepetim
+<p align="center">
+  <img src="screenshots/Screenshot_20250711_154037.jpg" alt="Favorilerim" width="250" style="margin-right: 15px;"/>
+  <img src="screenshots/Screenshot_20250711_154052.jpg" alt="Sepetim" width="250"/>
+</p>
 
-#### ❤️ Favorilerim
-![Favorilerim](screenshots/Screenshot_20250711_154037.jpg)
-
-#### 🛒 Sepetim
-![Sepetim](screenshots/Screenshot_20250711_154052.jpg)
-
-#### 💳 Ödeme Sayfası
-![Ödeme Sayfası](screenshots/Screenshot_20250711_154231.jpg)
-
-#### 📦 Sipariş Özeti
-![Sipariş Özeti](screenshots/Screenshot_20250711_154245.jpg)
-
-#### 🔑 Giriş Yap
-![Giriş Yap](screenshots/Screenshot_20250711_153219.jpg)
-
-#### 📝 Kayıt Ol
-![Kayıt Ol](screenshots/Screenshot_20250711_153606.jpg)
+#### 💳 Ödeme Sayfası & 📦 Sipariş Özeti
+<p align="center">
+  <img src="screenshots/Screenshot_20250711_154231.jpg" alt="Ödeme Sayfası" width="250" style="margin-right: 15px;"/>
+  <img src="screenshots/Screenshot_20250711_154245.jpg" alt="Sipariş Özeti" width="250"/>
+</p>
 
 ---
 
