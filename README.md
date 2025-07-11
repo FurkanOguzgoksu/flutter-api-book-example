@@ -13,7 +13,9 @@
 ## 🇹🇷 TR Türkçe
 
 ### 📖 Hakkında
-Bu proje, **Butkon Asansör**'de yaptığım staj süresince öğrenme amacıyla geliştirilmiştir. 3 hafta boyunca mobil uygulama geliştirme ve Flutter teknolojileri üzerine yoğunlaştım. Eksiklikleri olabilir ancak bu süreç benim için çok değerli bir öğrenme deneyimiydi.
+Bu proje, **Butkon Asansör**'de yaptığım staj süresince öğrenme amacıyla geliştirilmiştir. 4 hafta boyunca mobil uygulama geliştirme ve Flutter teknolojileri üzerine yoğunlaştım. Eksiklikleri muhakkak vardır ancak bu süreç benim için çok değerli bir öğrenme deneyimiydi.
+
+Desteklerinden dolayı <a href="https://github.com/BayramYARIM" target="_blank" rel="noopener noreferrer"> **Bayram YARIM** </a>’a teşekkür ederim.
 
 ---
 
