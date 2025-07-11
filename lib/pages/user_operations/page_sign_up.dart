@@ -66,7 +66,6 @@ class _PageSignUpState extends State<PageSignUp> {
             children: [
               const SizedBox(height: 10),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   IconButton(
                     onPressed: () {
@@ -74,6 +73,7 @@ class _PageSignUpState extends State<PageSignUp> {
                     },
                     icon: Icon(Icons.arrow_back, color: Color(0xFF1E88E5)),
                   ),
+                  const Spacer(),
                   const Text(
                     "Kayıt Ol",
                     style: TextStyle(
@@ -82,7 +82,9 @@ class _PageSignUpState extends State<PageSignUp> {
                       color: Color(0xFF1E88E5),
                     ),
                   ),
+                  const Spacer(),
                   Icon(Icons.security, color: Color(0xFF1E88E5)),
+                  const SizedBox(width: 10),
                 ],
               ),
 

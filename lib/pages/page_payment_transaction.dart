@@ -191,7 +191,6 @@ class _PagePaymentTransactionState extends State<PagePaymentTransaction> {
                                       builder: (context) => PageMyAddresses(),
                                     ),
                                   );
-                                  savedAddress = [];
                                   selectedAddress = "";
                                 },
                                 icon: Icon(Icons.add_home_work),

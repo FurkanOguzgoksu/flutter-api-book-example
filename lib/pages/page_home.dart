@@ -168,7 +168,7 @@ class _PageHomeState extends State<PageHome> {
                       color: kTextWhiteColor,
                     ),
                   ),
-                  Positioned(right: 20, top: 25, child: Text("1")),
+                  Positioned(right: 20, top: 25, child: Text("0")),
                 ],
               ),
               Stack(
@@ -182,7 +182,7 @@ class _PageHomeState extends State<PageHome> {
                     },
                     icon: Icon(Icons.favorite, color: kTextWhiteColor),
                   ),
-                  Positioned(right: 20, top: 25, child: Text("1")),
+                  Positioned(right: 20, top: 25, child: Text("0")),
                 ],
               ),
             ],
