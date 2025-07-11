@@ -259,6 +259,7 @@ class _PageSignUpState extends State<PageSignUp> {
                                             });
 
                                             if (result["statusCode"] == 201) {
+                                              if (!context.mounted) return;
                                               ScaffoldMessenger.of(
                                                 context,
                                               ).showSnackBar(
@@ -272,10 +273,12 @@ class _PageSignUpState extends State<PageSignUp> {
                                               await Future.delayed(
                                                 const Duration(seconds: 1),
                                               );
+                                              if (!context.mounted) return;
                                               Navigator.pop(
                                                 context,
                                               ); // Giriş sayfasına döner
                                             } else {
+                                              if (!context.mounted) return;
                                               ScaffoldMessenger.of(
                                                 context,
                                               ).showSnackBar(

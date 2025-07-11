@@ -62,7 +62,6 @@ class _PageForgotPasswordState extends State<PageForgotPassword> {
                   ),
                 ],
               ),
-
               const SizedBox(height: 10),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 24.0),
@@ -79,7 +78,6 @@ class _PageForgotPasswordState extends State<PageForgotPassword> {
                 ),
               ),
               const SizedBox(height: 30),
-
               // Expanded, içindeki widget’ın mümkün olan tüm boş alanı kaplamasını sağlar.
               // Flexible da boş alanı kullanır ama gerekirse sıkışabilir, yani “gerektiği kadar yer kapla” der.
               Flexible(
@@ -143,6 +141,8 @@ class _PageForgotPasswordState extends State<PageForgotPassword> {
                                             );
 
                                             if (resultCode == 200) {
+                                              if (!context.mounted) return;
+
                                               ScaffoldMessenger.of(
                                                 context,
                                               ).showSnackBar(
@@ -157,6 +157,8 @@ class _PageForgotPasswordState extends State<PageForgotPassword> {
                                                 ),
                                               );
                                             } else {
+                                              if (!context.mounted) return;
+
                                               ScaffoldMessenger.of(
                                                 context,
                                               ).showSnackBar(

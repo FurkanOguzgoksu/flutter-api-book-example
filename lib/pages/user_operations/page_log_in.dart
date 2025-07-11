@@ -274,6 +274,8 @@ class _LogInPageState extends State<LogInPage> {
                                                   personal,
                                                 );
 
+                                                if (!context.mounted) return;
+
                                                 Navigator.pushAndRemoveUntil(
                                                   context,
                                                   MaterialPageRoute(
@@ -285,6 +287,8 @@ class _LogInPageState extends State<LogInPage> {
                                                 );
                                               } else if (result["statusCode"] ==
                                                   401) {
+                                                if (!context.mounted) return;
+
                                                 ScaffoldMessenger.of(
                                                   context,
                                                 ).showSnackBar(
@@ -296,6 +300,8 @@ class _LogInPageState extends State<LogInPage> {
                                                   ),
                                                 );
                                               } else {
+                                                if (!context.mounted) return;
+
                                                 ScaffoldMessenger.of(
                                                   context,
                                                 ).showSnackBar(
