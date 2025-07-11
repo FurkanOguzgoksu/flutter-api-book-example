@@ -70,4 +70,15 @@ class BasketProvider with ChangeNotifier {
 
     return sum;
   }
+
+  int getDifferentBasketValues() {
+    List<Book> differentBasketList = [];
+
+    for (var item in basketBooks.entries) {
+      if (_basketBooks.containsKey(item.key)) {
+        differentBasketList.add(item.key);
+      }
+    }
+    return differentBasketList.length;
+  }
 }

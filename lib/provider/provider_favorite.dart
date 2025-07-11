@@ -18,4 +18,15 @@ class FavoriteProvider extends ChangeNotifier {
   bool isFavorite(Book book) {
     return _favoriteBooks.contains(book);
   }
+
+  int getDifferentFavoriteValues() {
+    List<Book> differentBasketList = [];
+
+    for (var item in favoriteBooks) {
+      if (_favoriteBooks.contains(item)) {
+        differentBasketList.add(item);
+      }
+    }
+    return differentBasketList.length;
+  }
 }

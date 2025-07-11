@@ -9,6 +9,7 @@ import 'package:film_app/pages/page_book_detail.dart';
 import 'package:film_app/pages/page_favorite.dart';
 import 'package:film_app/pages/page_shopping_basket.dart';
 import 'package:film_app/pages/user_operations/page_log_in.dart';
+import 'package:film_app/provider/provider_basket.dart';
 import 'package:film_app/services/http_services.dart';
 import 'package:film_app/provider/provider_favorite.dart';
 import 'package:film_app/widgets/card_grid.dart';
@@ -142,6 +143,7 @@ class _PageHomeState extends State<PageHome> {
   @override
   Widget build(BuildContext context) {
     final favorite = Provider.of<FavoriteProvider>(context);
+    final basket = Provider.of<BasketProvider>(context);
 
     return Scaffold(
       backgroundColor: Colors.grey[300],
@@ -168,7 +170,11 @@ class _PageHomeState extends State<PageHome> {
                       color: kTextWhiteColor,
                     ),
                   ),
-                  Positioned(right: 20, top: 25, child: Text("0")),
+                  Positioned(
+                    right: 20,
+                    top: 25,
+                    child: Text(basket.getDifferentBasketValues().toString()),
+                  ),
                 ],
               ),
               Stack(
@@ -182,7 +188,13 @@ class _PageHomeState extends State<PageHome> {
                     },
                     icon: Icon(Icons.favorite, color: kTextWhiteColor),
                   ),
-                  Positioned(right: 20, top: 25, child: Text("0")),
+                  Positioned(
+                    right: 20,
+                    top: 25,
+                    child: Text(
+                      favorite.getDifferentFavoriteValues().toString(),
+                    ),
+                  ),
                 ],
               ),
             ],
