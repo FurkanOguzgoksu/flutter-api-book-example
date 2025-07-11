@@ -1,25 +1,34 @@
-<p align="right">
-  <a href="#tr">🇹🇷 Türkçe</a> | <a href="#en">🇬🇧 English</a>
+<p align="center">
+  <img src="icon/app_icon.png" alt="Book App Logo" width="200"/>
+</p>
+
+<h1 align="center">📚 Book App</h1>
+
+<p align="center">
+  <a href="#🇹🇷-tr-türkçe">🇹🇷 Türkçe</a> • <a href="#🇬🇧-en-english">🇬🇧 English</a>
 </p>
 
 ---
 
-## <a name="tr"></a>🇹🇷 Türkçe
+## 🇹🇷 TR Türkçe
 
-# Book App
-
-Bu proje, Butkon Asansör'de yapmış olduğum staj süresince öğrenme amaçlı geliştirilmiştir.  
-Eksiklikleri muhakkak vardır.
-
-Desteklerinden dolayı <a href="https://github.com/BayramYARIM" target="_blank">Bayram YARIM</a>‘a teşekkür ederim.
+### 📖 Hakkında
+Bu proje, **Butkon Asansör**'de yaptığım staj süresince öğrenme amacıyla geliştirilmiştir. 3 hafta boyunca mobil uygulama geliştirme ve Flutter teknolojileri üzerine yoğunlaştım. Eksiklikleri olabilir ancak bu süreç benim için çok değerli bir öğrenme deneyimiydi.
 
 ---
 
-## <a name="en"></a>🇬🇧 English
+### 🛠️ Kullanılan Teknolojiler
+- Dart
+- Flutter
+- RESTful API
+- Provider
+- Firebase
 
-# Book App
+---
 
-This project was developed during my internship at Butkon Asansör for learning purposes.  
-It may have some shortcomings.
-
-Special thanks to <a href="https://github.com/BayramYARIM" target="_blank">Bayram YARIM</a> for his support.
+### 🚀 Kurulum
+```bash
+git clone https://github.com/FurkanOguzgoksu/flutter-api-book-example
+cd flutter-api-book-example
+flutter pub get
+flutter run
