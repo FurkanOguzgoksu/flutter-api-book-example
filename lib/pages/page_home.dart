@@ -263,33 +263,42 @@ class _PageHomeState extends State<PageHome> {
                     },
                     child: Container(
                       padding: EdgeInsets.all(8),
-                      margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                      margin: EdgeInsets.symmetric(vertical: 5),
                       decoration: BoxDecoration(
                         color: Colors.green[300],
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Image.network(
-                            imageUrl,
-                            fit: BoxFit.cover,
-                            loadingBuilder: (context, child, progress) {
-                              if (progress == null) return child;
-                              return Container(
-                                width: 80,
-                                height: 100,
-                                alignment: Alignment.center,
-                                child: CircularProgressIndicator(),
-                              );
-                            },
-                            errorBuilder: (context, error, stackTrace) {
-                              return Image.asset(
-                                "images/book.png",
-                                width: 80,
-                                height: 100,
-                                fit: BoxFit.cover,
-                              );
-                            },
+                          Column(
+                            children: [
+                              SizedBox(
+                                height: 165,
+                                child: Image.network(
+                                  imageUrl,
+                                  fit: BoxFit.cover,
+                                  loadingBuilder: (context, child, progress) {
+                                    if (progress == null) return child;
+                                    return Container(
+                                      width: 80,
+                                      height: 100,
+                                      alignment: Alignment.center,
+                                      child: CircularProgressIndicator(),
+                                    );
+                                  },
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return Image.asset(
+                                      "images/book.png",
+                                      width: 80,
+                                      height: 100,
+                                      fit: BoxFit.cover,
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
                           ),
                           SizedBox(width: 10),
                           Expanded(
@@ -332,7 +341,7 @@ class _PageHomeState extends State<PageHome> {
                   );
                 },
                 options: CarouselOptions(
-                  height: 200,
+                  height: 220,
                   autoPlay: true,
                   enlargeCenterPage: true,
                   viewportFraction: 0.8,
@@ -348,15 +357,16 @@ class _PageHomeState extends State<PageHome> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List.generate(
                   allBooks.length >= 10 ? 10 : allBooks.length,
-                  (index) => Container(
-                    width: 8,
-                    height: 8,
-                    margin: EdgeInsets.symmetric(horizontal: 3, vertical: 8),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: currentIndex == index
-                          ? Colors.green
-                          : Colors.grey[400],
+                  (index) => Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: SizedBox(
+                      height: 10,
+                      width: 10,
+                      child: CircleAvatar(
+                        backgroundColor: currentIndex == index
+                            ? Colors.green
+                            : Colors.grey,
+                      ),
                     ),
                   ),
                 ),

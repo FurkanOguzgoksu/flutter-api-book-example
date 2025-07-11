@@ -179,8 +179,9 @@ class _PagePaymentTransactionState extends State<PagePaymentTransaction> {
                 prefixIcon: Icons.credit_card,
                 validator: (value) {
                   String cleaned = value!.replaceAll(' ', '');
-                  if (cleaned.length != 16)
+                  if (cleaned.length != 16) {
                     return "Kart numarası 16 haneli olmalı";
+                  }
                   return null;
                 },
                 inputFormatters: [
@@ -257,7 +258,7 @@ class _PagePaymentTransactionState extends State<PagePaymentTransaction> {
                     style: const TextStyle(fontSize: 16),
                   ),
                 );
-              }).toList(),
+              }),
           ],
         ),
       ),
@@ -314,9 +315,15 @@ class _PagePaymentTransactionState extends State<PagePaymentTransaction> {
     int currentYear,
     int currentMonth,
   ) {
-    if ((selectedAddress?.isEmpty ?? true) ||
-        (selectedPayment?.isEmpty ?? true)) {
+    if ((selectedPayment?.isEmpty ?? true) &&
+        (selectedAddress?.isEmpty ?? true)) {
       _showSnack("Lütfen adres ve ödeme yöntemi seçiniz");
+      return;
+    } else if ((selectedPayment?.isEmpty ?? true)) {
+      _showSnack("Lütfen ödeme yöntemi seçiniz");
+      return;
+    } else if ((selectedAddress?.isEmpty ?? true)) {
+      _showSnack("Lütfen adres yöntemi seçiniz");
       return;
     }
     if (selectedPayment == "Kredi Kartı" &&
