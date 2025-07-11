@@ -29,7 +29,7 @@ class _PagePaymentTransactionState extends State<PagePaymentTransaction> {
   @override
   void initState() {
     super.initState();
-    savedAddress = myAddres; // Kayıtlı adresler
+    savedAddress = myAddres;
   }
 
   @override
@@ -65,14 +65,83 @@ class _PagePaymentTransactionState extends State<PagePaymentTransaction> {
           ),
         ),
       ),
-      bottomNavigationBar: _buildBottomBar(
-        context,
-        basket,
-        currentYear,
-        currentMonth,
+      bottomNavigationBar: Container(
+        height: 80,
+        color: kBackgroundColor,
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text("Toplam Tutar", style: TextStyle(fontSize: 14)),
+                  Text(
+                    "${NumberFormat.currency(locale: 'tr_TR', symbol: '', decimalDigits: 2).format(basket.totalPrice)} ₺",
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: ElevatedButton(
+                onPressed: () {
+                  if ((selectedPayment?.isEmpty ?? true) &&
+                      (selectedAddress?.isEmpty ?? true)) {
+                    _showSnack(
+                      "Lütfen adres ve ödeme yöntemi seçiniz",
+                      Colors.red,
+                    );
+                    return;
+                  } else if ((selectedPayment?.isEmpty ?? true)) {
+                    _showSnack("Lütfen ödeme yöntemi seçiniz", Colors.red);
+                    return;
+                  } else if ((selectedAddress?.isEmpty ?? true)) {
+                    _showSnack("Lütfen adres yöntemi seçiniz", Colors.red);
+                    return;
+                  }
+                  if (selectedPayment == "Kredi Kartı" &&
+                      _formKey.currentState != null &&
+                      !_formKey.currentState!.validate()) {
+                    return;
+                  }
+                  if (year == currentYear && month < currentMonth) {
+                    _showSnack("Geçmiş bir tarih seçilemez!", Colors.red);
+                    return;
+                  }
+
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => PageConfirm(
+                        personal: widget.personal,
+                        paymetMethod: selectedPayment,
+                        adress: selectedAddress,
+                        success: true,
+                      ),
+                    ),
+                    (route) => false,
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: kBlackColor,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.zero,
+                  ),
+                ),
+                child: const Text("Ödeme Yap"),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
+
+  // Fonksiyonlar
 
   Widget _buildAddressCard(BuildContext context) {
     return Card(
@@ -93,7 +162,63 @@ class _PagePaymentTransactionState extends State<PagePaymentTransaction> {
                 ),
                 const Spacer(),
                 ElevatedButton(
-                  onPressed: () => _showAddressDialog(context),
+                  onPressed: () {
+                    if (savedAddress.isEmpty) {
+                      Text("Kayıtlı adres bulunamadı.");
+                    }
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: Row(
+                          children: [
+                            Text("Kayıtlı Adreslerim"),
+                            Spacer(),
+                            GestureDetector(
+                              onLongPress: () {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text("Adres Ekle"),
+                                    duration: Duration(seconds: 2),
+                                  ),
+                                );
+                              },
+                              child: IconButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => PageMyAddresses(),
+                                    ),
+                                  );
+                                  savedAddress = [];
+                                  selectedAddress = "";
+                                },
+                                icon: Icon(Icons.add_home_work),
+                              ),
+                            ),
+                          ],
+                        ),
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: savedAddress.map((address) {
+                            return RadioListTile<String>(
+                              title: Text(address["title"]!),
+                              subtitle: Text(address["addres"]!),
+                              value: address["addres"]!,
+                              groupValue: selectedAddress,
+                              onChanged: (value) {
+                                setState(() {
+                                  selectedAddress = value;
+                                });
+                                Navigator.of(context).pop();
+                              },
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    );
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: kBackgroundColor,
                     foregroundColor: kBlackColor,
@@ -144,7 +269,69 @@ class _PagePaymentTransactionState extends State<PagePaymentTransaction> {
               onChanged: (value) => setState(() => selectedPayment = value),
             ),
             if (selectedPayment == "Kredi Kartı")
-              _buildCreditCardForm(currentYear, currentMonth),
+              Card(
+                margin: const EdgeInsets.only(top: 10),
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      children: [
+                        _buildCardInfoTextField(
+                          controller: cardNoController,
+                          label: "Kart Numarası",
+                          prefixIcon: Icons.credit_card,
+                          validator: (value) {
+                            String cleaned = value!.replaceAll(' ', '');
+                            if (cleaned.length != 16) {
+                              return "Kart numarası 16 haneli olmalı";
+                            }
+                            return null;
+                          },
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                            _CardNumberFormatter(),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: _buildMonthDropdown(
+                                currentYear,
+                                currentMonth,
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: _buildYearDropdown(
+                                currentYear,
+                                currentMonth,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                        _buildCardInfoTextField(
+                          controller: cvvController,
+                          label: "CVV",
+                          prefixIcon: Icons.lock,
+                          validator: (value) {
+                            if (value!.length != 3) {
+                              return "CVV 3 haneli olmalı";
+                            }
+                            return null;
+                          },
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                            _ThreeDigitInputFormatter(),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
             RadioListTile<String>(
               title: const Text("Kapıda Ödeme"),
               value: "Kapıda Ödeme",
@@ -157,66 +344,59 @@ class _PagePaymentTransactionState extends State<PagePaymentTransaction> {
               groupValue: selectedPayment,
               onChanged: (value) => setState(() => selectedPayment = value),
             ),
-            if (selectedPayment == "Banka Havalesi") _buildIbanList(),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildCreditCardForm(int currentYear, int currentMonth) {
-    return Card(
-      margin: const EdgeInsets.only(top: 10),
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              _buildTextField(
-                controller: cardNoController,
-                label: "Kart Numarası",
-                prefixIcon: Icons.credit_card,
-                validator: (value) {
-                  String cleaned = value!.replaceAll(' ', '');
-                  if (cleaned.length != 16) {
-                    return "Kart numarası 16 haneli olmalı";
-                  }
-                  return null;
-                },
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                  _CardNumberFormatter(),
-                ],
-              ),
-              const SizedBox(height: 10),
-              Row(
-                children: [
-                  Expanded(
-                    child: _buildMonthDropdown(currentYear, currentMonth),
+            if (selectedPayment == "Banka Havalesi") ...[
+              Card(
+                margin: const EdgeInsets.only(top: 10),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: ibanList.map((bank) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 6.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    bank["bankName"]!,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 2),
+                                  Text(
+                                    bank["iban"]!,
+                                    style: const TextStyle(fontSize: 14),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.copy),
+                              onPressed: () {
+                                _showSnack(
+                                  "IBAN kopyalandı!",
+                                  Colors.indigoAccent,
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      );
+                    }).toList(),
                   ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: _buildYearDropdown(currentYear, currentMonth),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
-              _buildTextField(
-                controller: cvvController,
-                label: "CVV",
-                prefixIcon: Icons.lock,
-                validator: (value) {
-                  if (value!.length != 3) return "CVV 3 haneli olmalı";
-                  return null;
-                },
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                  _ThreeDigitInputFormatter(),
-                ],
+                ),
               ),
             ],
-          ),
+          ],
         ),
       ),
     );
@@ -265,157 +445,17 @@ class _PagePaymentTransactionState extends State<PagePaymentTransaction> {
     );
   }
 
-  Widget _buildBottomBar(
-    BuildContext context,
-    BasketProvider basket,
-    int currentYear,
-    int currentMonth,
-  ) {
-    return Container(
-      height: 80,
-      color: kBackgroundColor,
-      padding: const EdgeInsets.all(16),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text("Toplam Tutar", style: TextStyle(fontSize: 14)),
-                Text(
-                  "${NumberFormat.currency(locale: 'tr_TR', symbol: '', decimalDigits: 2).format(basket.totalPrice)} ₺",
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Expanded(
-            child: ElevatedButton(
-              onPressed: () =>
-                  _confirmPayment(context, currentYear, currentMonth),
-              style: ElevatedButton.styleFrom(
-                foregroundColor: kBlackColor,
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.zero,
-                ),
-              ),
-              child: const Text("Ödeme Yap"),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _confirmPayment(
-    BuildContext context,
-    int currentYear,
-    int currentMonth,
-  ) {
-    if ((selectedPayment?.isEmpty ?? true) &&
-        (selectedAddress?.isEmpty ?? true)) {
-      _showSnack("Lütfen adres ve ödeme yöntemi seçiniz");
-      return;
-    } else if ((selectedPayment?.isEmpty ?? true)) {
-      _showSnack("Lütfen ödeme yöntemi seçiniz");
-      return;
-    } else if ((selectedAddress?.isEmpty ?? true)) {
-      _showSnack("Lütfen adres yöntemi seçiniz");
-      return;
-    }
-    if (selectedPayment == "Kredi Kartı" &&
-        _formKey.currentState != null &&
-        !_formKey.currentState!.validate()) {
-      return;
-    }
-    if (year == currentYear && month < currentMonth) {
-      _showSnack("Geçmiş bir tarih seçilemez!");
-      return;
-    }
-
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(
-        builder: (context) => PageConfirm(
-          personal: widget.personal,
-          paymetMethod: selectedPayment,
-          adress: selectedAddress,
-          success: true,
-        ),
-      ),
-      (route) => false,
-    );
-  }
-
-  void _showSnack(String msg) {
+  void _showSnack(String msg, Color clr) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(msg),
-        backgroundColor: Colors.red,
+        backgroundColor: clr,
         duration: const Duration(seconds: 2),
       ),
     );
   }
 
-  void _showAddressDialog(BuildContext context) {
-    if (savedAddress.isEmpty) {
-      _showSnack("Kayıtlı adres bulunamadı.");
-      return;
-    }
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Row(
-          children: [
-            Text("Kayıtlı Adreslerim"),
-            Spacer(),
-            GestureDetector(
-              onLongPress: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text("Adres Ekle"),
-                    duration: Duration(seconds: 2),
-                  ),
-                );
-              },
-              child: IconButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => PageMyAddresses()),
-                  );
-                },
-                icon: Icon(Icons.add_home_work),
-              ),
-            ),
-          ],
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: savedAddress.map((address) {
-            return RadioListTile<String>(
-              title: Text(address["title"]!),
-              subtitle: Text(address["addres"]!),
-              value: address["addres"]!,
-              groupValue: selectedAddress,
-              onChanged: (value) {
-                setState(() {
-                  selectedAddress = value;
-                });
-                Navigator.of(context).pop();
-              },
-            );
-          }).toList(),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTextField({
+  Widget _buildCardInfoTextField({
     required TextEditingController controller,
     required String label,
     required IconData prefixIcon,
@@ -449,7 +489,7 @@ class _PagePaymentTransactionState extends State<PagePaymentTransaction> {
           value: isDisabled ? null : monthValue,
           enabled: !isDisabled,
           child: Text(
-            "${monthValue.toString().padLeft(2, '0')} ",
+            "${monthValue.toString().padLeft(2, '0')} ", // Sayılarınbaşına sıfır ekleme
             style: TextStyle(color: isDisabled ? Colors.grey : Colors.black),
           ),
         );
@@ -482,60 +522,11 @@ class _PagePaymentTransactionState extends State<PagePaymentTransaction> {
         setState(() {
           year = value!;
           if (year == currentYear && month < currentMonth) {
-            _showSnack("Geçmiş bir ay seçilemez!");
+            _showSnack("Geçmiş bir ay seçilemez!", Colors.red);
             month = currentMonth;
           }
         });
       },
-    );
-  }
-
-  Widget _buildIbanList() {
-    return Card(
-      margin: const EdgeInsets.only(top: 10),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: ibanList.map((bank) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 6.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          bank["bankName"]!,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15,
-                          ),
-                        ),
-                        const SizedBox(height: 2),
-                        Text(
-                          bank["iban"]!,
-                          style: const TextStyle(fontSize: 14),
-                        ),
-                      ],
-                    ),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.copy),
-                    onPressed: () {
-                      Clipboard.setData(ClipboardData(text: bank["iban"]!));
-                      _showSnack("IBAN kopyalandı!");
-                    },
-                  ),
-                ],
-              ),
-            );
-          }).toList(),
-        ),
-      ),
     );
   }
 }
