@@ -4,8 +4,6 @@
 
 <h1 align="center">Book App</h1>
 
-===
-
 ### 📖 Hakkında
   Bu proje, **Butkon Asansör**'de yaptığım staj süresince öğrenme amacıyla geliştirilmiştir. 4 hafta boyunca mobil uygulama geliştirme ve Flutter teknolojileri üzerine yoğunlaştım. Eksiklikleri muhakkak vardır ancak bu süreç benim için çok değerli bir öğrenme deneyimiydi. 
 
@@ -32,8 +30,6 @@
   <img src="screenshots/Screenshot_20250711_153219.jpg" alt="Giriş Yap" width="250" style="margin-right: 50px;"/>
   <img src="screenshots/Screenshot_20250711_153606.jpg" alt="Kayıt Ol" width="250"/>
 </p>
-
-
 
 #### 📕 Ana Sayfa & 📖 Kitap Detay Sayfası
 <p>
