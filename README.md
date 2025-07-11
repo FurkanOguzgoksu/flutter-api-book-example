@@ -1,8 +1,8 @@
-<p align="center">
+<p >
   <img src="icon/app_icon.png" alt="Book App Logo" width="200"/>
 </p>
 
-<h1 align="center">Book App</h1>
+<h1 >Book App</h1>
 
 ---
 
@@ -26,32 +26,36 @@
 ### 📸 Ekran Görüntüleri
 
 #### 🔑 Giriş Yap & 📝 Kayıt Ol
-<p align="center">
-  <img src="screenshots/Screenshot_20250711_153219.jpg" alt="Giriş Yap" width="250" style="margin-right: 30px;"/>
+
+
+<p >
+  <img src="screenshots/Screenshot_20250711_153219.jpg" alt="Giriş Yap" width="250" style="margin-right: 50px;"/>
   <img src="screenshots/Screenshot_20250711_153606.jpg" alt="Kayıt Ol" width="250"/>
 </p>
 
+
+
 #### 📕 Ana Sayfa & 📖 Kitap Detay Sayfası
-<p align="center">
-  <img src="screenshots/Screenshot_20250711_153726.jpg" alt="Ana Sayfa" width="250" style="margin-right: 30px;"/>
+<p>
+  <img src="screenshots/Screenshot_20250711_153726.jpg" alt="Ana Sayfa" width="250" style="margin-right: 50px;"/>
   <img src="screenshots/Screenshot_20250711_153820.jpg" alt="Kitap Detay" width="250"/>
 </p>
 
 #### 👤 Kişisel Bilgiler & 📍 Adreslerim
-<p align="center">
-  <img src="screenshots/Screenshot_20250711_153900.jpg" alt="Kişisel Bilgiler" width="250" style="margin-right: 30px;"/>
+<p >
+  <img src="screenshots/Screenshot_20250711_153900.jpg" alt="Kişisel Bilgiler" width="250" style="margin-right: 50px;"/>
   <img src="screenshots/Screenshot_20250711_153910.jpg" alt="Adreslerim" width="250"/>
 </p>
 
 #### 🛒 Sepetim & ❤️ Favorilerim
-<p align="center">
-  <img src="screenshots/Screenshot_20250711_154052.jpg" alt="Sepetim" width="250" style="margin-right: 30px;"/>
+<p >
+  <img src="screenshots/Screenshot_20250711_154052.jpg" alt="Sepetim" width="250" style="margin-right: 50px;"/>
   <img src="screenshots/Screenshot_20250711_154037.jpg" alt="Favorilerim" width="250"/>
 </p>
 
 #### 💳 Ödeme Sayfası & 📦 Sipariş Özeti
-<p align="center"> 
-  <img src="screenshots/Screenshot_20250711_154245.jpg" alt="Ödeme Sayfası " width="250" style="margin-right: 30px;"/>
+<p > 
+  <img src="screenshots/Screenshot_20250711_154245.jpg" alt="Ödeme Sayfası " width="250" style="margin-right: 50px;"/>
   <img src="screenshots/Screenshot_20250711_154316.jpg" alt="Sipariş Özeti" width="250"/>
 </p>
 
