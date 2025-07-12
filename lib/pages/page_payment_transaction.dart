@@ -23,8 +23,19 @@ class _PagePaymentTransactionState extends State<PagePaymentTransaction> {
   List<Map<String, String>> savedAddress = [];
   String? selectedAddress;
   String? selectedPayment;
+<<<<<<< HEAD
   int year = DateTime.now().year;
   int month = DateTime.now().month;
+
+  @override
+  void initState() {
+    super.initState();
+    savedAddress = myAddres;
+  }
+=======
+  int month = 7;
+  int year = 2025;
+>>>>>>> f818ef796cc5e7209f69a917a78df788c64e6573
 
   @override
   void initState() {
@@ -100,7 +111,11 @@ class _PagePaymentTransactionState extends State<PagePaymentTransaction> {
                     _showSnack("Lütfen ödeme yöntemi seçiniz", Colors.red);
                     return;
                   } else if ((selectedAddress?.isEmpty ?? true)) {
+<<<<<<< HEAD
                     _showSnack("Lütfen adres seçiniz", Colors.red);
+=======
+                    _showSnack("Lütfen adres yöntemi seçiniz", Colors.red);
+>>>>>>> f818ef796cc5e7209f69a917a78df788c64e6573
                     return;
                   }
                   if (selectedPayment == "Kredi Kartı" &&
@@ -141,6 +156,11 @@ class _PagePaymentTransactionState extends State<PagePaymentTransaction> {
     );
   }
 
+<<<<<<< HEAD
+=======
+  // Fonksiyonlar
+
+>>>>>>> f818ef796cc5e7209f69a917a78df788c64e6573
   Widget _buildAddressCard(BuildContext context) {
     return Card(
       margin: const EdgeInsets.only(bottom: 16),
@@ -162,20 +182,33 @@ class _PagePaymentTransactionState extends State<PagePaymentTransaction> {
                 ElevatedButton(
                   onPressed: () {
                     if (savedAddress.isEmpty) {
+<<<<<<< HEAD
                       _showSnack("Kayıtlı adres bulunamadı.", Colors.red);
                       return;
+=======
+                      Text("Kayıtlı adres bulunamadı.");
+>>>>>>> f818ef796cc5e7209f69a917a78df788c64e6573
                     }
                     showDialog(
                       context: context,
                       builder: (context) => AlertDialog(
                         title: Row(
                           children: [
+<<<<<<< HEAD
                             const Text("Kayıtlı Adreslerim"),
                             const Spacer(),
                             GestureDetector(
                               onLongPress: () {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
+=======
+                            Text("Kayıtlı Adreslerim"),
+                            Spacer(),
+                            GestureDetector(
+                              onLongPress: () {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+>>>>>>> f818ef796cc5e7209f69a917a78df788c64e6573
                                     content: Text("Adres Ekle"),
                                     duration: Duration(seconds: 2),
                                   ),
@@ -194,7 +227,12 @@ class _PagePaymentTransactionState extends State<PagePaymentTransaction> {
                                     _checkSelectedAddressValidity();
                                   });
                                 },
+<<<<<<< HEAD
                                 icon: const Icon(Icons.add_home_work),
+=======
+
+                                icon: Icon(Icons.add_home_work),
+>>>>>>> f818ef796cc5e7209f69a917a78df788c64e6573
                               ),
                             ),
                           ],
@@ -495,7 +533,11 @@ class _PagePaymentTransactionState extends State<PagePaymentTransaction> {
           value: isDisabled ? null : monthValue,
           enabled: !isDisabled,
           child: Text(
+<<<<<<< HEAD
             "${monthValue.toString().padLeft(2, '0')} ",
+=======
+            "${monthValue.toString().padLeft(2, '0')} ", // Sayılarınbaşına sıfır ekleme
+>>>>>>> f818ef796cc5e7209f69a917a78df788c64e6573
             style: TextStyle(color: isDisabled ? Colors.grey : Colors.black),
           ),
         );

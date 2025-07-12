@@ -29,7 +29,7 @@ class CardGridBook extends StatelessWidget {
     final String subHead = fetchedbook.volumeInfo?.authors?.join("-") ?? "";
     final double price = fetchedbook.price ?? kBookPrice;
 
-    // Karta tıklama özelliği veriyor
+    // Tıklama özelliği veriyor
     return InkWell(
       onTap: fClick,
       child: Card(
