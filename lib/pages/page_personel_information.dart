@@ -1,4 +1,5 @@
 import 'package:film_app/features_personal/user_model.dart';
+import 'package:film_app/widgets/constant.dart';
 import 'package:flutter/material.dart';
 
 class PagePersonelInformation extends StatelessWidget {
@@ -9,7 +10,7 @@ class PagePersonelInformation extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.deepPurpleAccent,
+        backgroundColor: kBackgroundColor,
         title: const Text("Kişisel Bilgilerim"),
       ),
       body: SingleChildScrollView(
