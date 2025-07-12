@@ -62,9 +62,8 @@ class _PageForgotPasswordState extends State<PageForgotPassword> {
                   ),
                 ],
               ),
-
               const SizedBox(height: 10),
-              const Padding(
+              Padding(
                 padding: EdgeInsets.symmetric(horizontal: 24.0),
                 child: Center(
                   child: Text(
@@ -72,14 +71,13 @@ class _PageForgotPasswordState extends State<PageForgotPassword> {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 20,
-                      color: Colors.black87,
+                      color: kBlackColor,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
               ),
               const SizedBox(height: 30),
-
               // Expanded, içindeki widget’ın mümkün olan tüm boş alanı kaplamasını sağlar.
               // Flexible da boş alanı kullanır ama gerekirse sıkışabilir, yani “gerektiği kadar yer kapla” der.
               Flexible(
@@ -143,6 +141,8 @@ class _PageForgotPasswordState extends State<PageForgotPassword> {
                                             );
 
                                             if (resultCode == 200) {
+                                              if (!context.mounted) return;
+
                                               ScaffoldMessenger.of(
                                                 context,
                                               ).showSnackBar(
@@ -157,6 +157,8 @@ class _PageForgotPasswordState extends State<PageForgotPassword> {
                                                 ),
                                               );
                                             } else {
+                                              if (!context.mounted) return;
+
                                               ScaffoldMessenger.of(
                                                 context,
                                               ).showSnackBar(
@@ -180,9 +182,9 @@ class _PageForgotPasswordState extends State<PageForgotPassword> {
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                   ),
-                                  child: const Text(
+                                  child: Text(
                                     "Gönder",
-                                    style: TextStyle(color: Colors.white),
+                                    style: TextStyle(color: kTextWhiteColor),
                                   ),
                                 ),
                               ),
