@@ -20,26 +20,36 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   Future<void> checkLoginStatus() async {
-    // "Kullanıcı daha önce giriş yapmış mı, yapmamış mı?"
     final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString("accessToken");
+    final id = prefs.getString("id");
+    final username = prefs.getString("username");
+    final email = prefs.getString("email");
+    final accessToken = prefs.getString("accessToken");
+    final refreshToken = prefs.getString("refreshToken");
 
-    if (token != null) {
+    if (accessToken != null && username != null) {
+      final personal = UserModel(
+        id: id,
+        username: username,
+        email: email,
+        accessToken: accessToken,
+        refreshToken: refreshToken,
+      );
+
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text("Hoş geldiniz! Oturumunuz açık."),
-          duration: const Duration(seconds: 3),
+          duration: Duration(seconds: 2),
         ),
       );
-      if (!mounted) return;
+
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(
-          builder: (context) => PageHome(personal: widget.personal),
-        ),
+        MaterialPageRoute(builder: (context) => PageHome(personal: personal)),
       );
     } else {
+      // Token yoksa login ekranına gönder
       if (!mounted) return;
       Navigator.pushReplacement(
         context,
