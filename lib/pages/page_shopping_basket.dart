@@ -88,6 +88,9 @@ class _PageShoppingBasketState extends State<PageShoppingBasket> {
                           ),
                         );
                         await Future.delayed(const Duration(seconds: 2));
+
+                        if (!context.mounted) return;
+
                         Navigator.push(
                           context,
                           MaterialPageRoute(
