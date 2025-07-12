@@ -1,6 +1,8 @@
 import 'package:film_app/features_personal/user_model.dart';
 import 'package:film_app/pages/page_home.dart';
 import 'package:film_app/pages/page_personel_information.dart';
+import 'package:film_app/pages/user_operations/page_my_addresses.dart';
+import 'package:film_app/pages/user_operations/page_settings.dart';
 import 'package:film_app/widgets/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -22,7 +24,7 @@ class DrawerMenu extends StatelessWidget {
               child: Center(
                 child: Text(
                   "Kitap Uygulamasına Hoş Geldiniz",
-                  style: TextStyle(fontSize: 18.0, color: Colors.black),
+                  style: TextStyle(fontSize: 18.0, color: kBlackColor),
                 ),
               ),
             ),
@@ -43,17 +45,28 @@ class DrawerMenu extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.person),
             title: const Text("Profil Bilgilerim"),
-            onTap: () => {
+            onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) =>
                       PagePersonelInformation(personal: personal),
                 ),
-              ),
+              );
             },
           ),
-
+          ListTile(
+            leading: const Icon(Icons.add_home),
+            title: const Text("Adreslerim"),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const PageMyAddresses(),
+                ),
+              );
+            },
+          ),
           ListTile(
             leading: const Icon(Icons.book),
             title: const Text("Kitaplar"),
@@ -93,7 +106,12 @@ class DrawerMenu extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.settings),
             title: const Text("Ayarlar"),
-            onTap: () {},
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const PageSettings()),
+              );
+            },
           ),
           ListTile(
             leading: const Icon(Icons.exit_to_app),
