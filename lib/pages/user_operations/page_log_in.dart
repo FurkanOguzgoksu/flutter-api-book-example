@@ -92,7 +92,6 @@ class _LogInPageState extends State<LogInPage> {
                   child: Card(
                     elevation: 4,
                     shape: RoundedRectangleBorder(
-                      // Kartın kenarlarını yuvarlama
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: Padding(
@@ -137,7 +136,6 @@ class _LogInPageState extends State<LogInPage> {
                         key: _formKey,
                         child: Column(
                           children: [
-                            // Kullanıcı Adı
                             TextFormField(
                               controller: _usernameController,
                               enabled: !_isLoading,
@@ -145,18 +143,16 @@ class _LogInPageState extends State<LogInPage> {
                                   value == null || value.isEmpty
                                   ? "Kullanıcı adı boş bırakılamaz"
                                   : null,
-                              decoration: const InputDecoration(
+                              decoration: InputDecoration(
                                 labelText: "Kullanıcı adınızı giriniz",
                                 border: OutlineInputBorder(),
                                 prefixIcon: Icon(
                                   Icons.person,
-                                  color: Colors.black,
+                                  color: kBlackColor,
                                 ),
                               ),
                             ),
                             const SizedBox(height: 20),
-
-                            // Şifre
                             TextFormField(
                               controller: _passwordController,
                               obscureText: _moveText,
@@ -170,7 +166,7 @@ class _LogInPageState extends State<LogInPage> {
                                 border: const OutlineInputBorder(),
                                 prefixIcon: Icon(
                                   Icons.password,
-                                  color: Colors.black,
+                                  color: kBlackColor,
                                 ),
                                 suffixIcon: IconButton(
                                   onPressed: () {
@@ -203,7 +199,7 @@ class _LogInPageState extends State<LogInPage> {
                                 "Şifrenizi mi unuttunuz?",
                                 style: TextStyle(
                                   decoration: TextDecoration.underline,
-                                  color: Colors.black,
+                                  color: kBlackColor,
                                 ),
                               ),
                             ),
@@ -231,7 +227,7 @@ class _LogInPageState extends State<LogInPage> {
                                           },
                                     child: Text(
                                       "Kayıt Ol",
-                                      style: TextStyle(color: Colors.white),
+                                      style: TextStyle(color: kTextWhiteColor),
                                     ),
                                   ),
                                 ),
@@ -274,6 +270,8 @@ class _LogInPageState extends State<LogInPage> {
                                                   personal,
                                                 );
 
+                                                if (!context.mounted) return;
+
                                                 Navigator.pushAndRemoveUntil(
                                                   context,
                                                   MaterialPageRoute(
@@ -285,6 +283,8 @@ class _LogInPageState extends State<LogInPage> {
                                                 );
                                               } else if (result["statusCode"] ==
                                                   401) {
+                                                if (!context.mounted) return;
+
                                                 ScaffoldMessenger.of(
                                                   context,
                                                 ).showSnackBar(
@@ -296,6 +296,8 @@ class _LogInPageState extends State<LogInPage> {
                                                   ),
                                                 );
                                               } else {
+                                                if (!context.mounted) return;
+
                                                 ScaffoldMessenger.of(
                                                   context,
                                                 ).showSnackBar(
@@ -310,10 +312,9 @@ class _LogInPageState extends State<LogInPage> {
                                               }
                                             }
                                           },
-
-                                    child: const Text(
+                                    child: Text(
                                       "Giriş Yap",
-                                      style: TextStyle(color: Colors.white),
+                                      style: TextStyle(color: kTextWhiteColor),
                                     ),
                                   ),
                                 ),
@@ -321,10 +322,10 @@ class _LogInPageState extends State<LogInPage> {
                             ),
                             const SizedBox(height: 10),
                             Row(
-                              children: const [
+                              children: [
                                 Expanded(
                                   child: Divider(
-                                    color: Colors.black,
+                                    color: kBlackColor,
                                     thickness: 1, // Kalınlık
                                   ),
                                 ),
@@ -332,12 +333,12 @@ class _LogInPageState extends State<LogInPage> {
                                   padding: EdgeInsets.symmetric(horizontal: 10),
                                   child: Text(
                                     "Hesabını Bağla",
-                                    style: TextStyle(color: Colors.black),
+                                    style: TextStyle(color: kBlackColor),
                                   ),
                                 ),
                                 Expanded(
                                   child: Divider(
-                                    color: Colors.black,
+                                    color: kBlackColor,
                                     thickness: 1,
                                   ),
                                 ),
