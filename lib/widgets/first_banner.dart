@@ -1,5 +1,8 @@
+// İlk açılışta kullanıcıyı karşılama ve internet bağlantı kontrolü sağlanmaktadır.
+
 import 'dart:async';
 import 'package:film_app/features_personal/user_model.dart';
+import 'package:film_app/widgets/constant.dart';
 import 'package:flutter/material.dart';
 
 class FirstBanner extends StatefulWidget {
@@ -50,14 +53,14 @@ class _FirstBannerState extends State<FirstBanner> {
         children: [
           Icon(
             widget.isConnected ? Icons.waving_hand : Icons.wifi_off,
-            color: widget.isConnected ? Colors.amberAccent : Colors.white,
+            color: widget.isConnected ? Colors.amberAccent : kTextWhiteColor,
           ),
           const SizedBox(width: 8),
           Text(
             widget.isConnected
                 ? "Hoşgeldin ${widget.personal?.username ?? "Bilinmeyen kullanıcı"}"
                 : "İnternet bağlantısı yok",
-            style: const TextStyle(color: Colors.white),
+            style: TextStyle(color: kTextWhiteColor),
           ),
         ],
       ),
