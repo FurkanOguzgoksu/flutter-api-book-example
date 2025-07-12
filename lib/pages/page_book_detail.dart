@@ -111,7 +111,7 @@ class _PageBookState extends State<PageBook> {
                   ],
                 ),
               ),
-              const Divider(color: Colors.black, thickness: 1.5),
+              Divider(color: kBlackColor, thickness: 1.5),
               Table(
                 columnWidths: const {
                   0: IntrinsicColumnWidth(), // Sol sütun genişliği kadar yer kaplasın
@@ -155,7 +155,7 @@ class _PageBookState extends State<PageBook> {
                   ),
                 ],
               ),
-              Divider(color: Colors.black, thickness: 1.5),
+              Divider(color: kBlackColor, thickness: 1.5),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -210,9 +210,9 @@ class _PageBookState extends State<PageBook> {
                             ),
                           );
                         },
-                  child: const Text(
+                  child: Text(
                     "Sepete Ekle",
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(color: kTextWhiteColor),
                   ),
                 ),
               ),
