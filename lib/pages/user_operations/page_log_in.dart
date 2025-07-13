@@ -28,8 +28,6 @@ class _LogInPageState extends State<LogInPage> {
   bool _moveText = true;
   bool _isLoading = false;
 
-  final int yy = 10;
-
   static Future<Map<String, dynamic>> _loginServices({
     String? username,
     String? password,
