@@ -21,7 +21,9 @@ class PageSettings extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: Card(
           child: ListTile(
-            title: const Text("Tema Modu"),
+            title: Text(
+              "Geçerli Mod: ${themeProvider.isDarkMode ? "Dark Mod" : "Light Mod"}",
+            ),
             trailing: Switch(
               value: themeProvider.isDarkMode,
               onChanged: (bool value) {
