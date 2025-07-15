@@ -72,7 +72,7 @@ class BasketProvider with ChangeNotifier {
   }
 
   int getDifferentBasketValues() {
-    List<Book> differentBasketList = [];
+    Set<Book> differentBasketList = {};
 
     for (var item in basketBooks.entries) {
       if (_basketBooks.containsKey(item.key)) {
