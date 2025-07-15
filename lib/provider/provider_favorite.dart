@@ -20,7 +20,7 @@ class FavoriteProvider extends ChangeNotifier {
   }
 
   int getDifferentFavoriteValues() {
-    List<Book> differentBasketList = [];
+    Set<Book> differentBasketList = {};
 
     for (var item in favoriteBooks) {
       if (_favoriteBooks.contains(item)) {
