@@ -13,8 +13,7 @@ class PageForgotPassword extends StatefulWidget {
 class _PageForgotPasswordState extends State<PageForgotPassword> {
   final TextEditingController _eMailController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  final bool _isLoading = false;
-  bool _isButon = false;
+  bool _isLoading = false;
 
   static Future<int> _forgotPasswordServices(String email) async {
     final Uri url = Uri.parse(kUserForgotPasswordLink);
@@ -117,12 +116,14 @@ class _PageForgotPasswordState extends State<PageForgotPassword> {
                               SizedBox(
                                 width: 120,
                                 child: ElevatedButton(
-                                  onPressed: _isButon
+                                  onPressed: _isLoading
                                       ? null
                                       : () async {
                                           if (_formKey.currentState!
                                               .validate()) {
-                                            setState(() => _isButon = true);
+                                            setState(() {
+                                              _isLoading = true;
+                                            });
 
                                             int resultCode =
                                                 await _forgotPasswordServices(
@@ -134,7 +135,7 @@ class _PageForgotPasswordState extends State<PageForgotPassword> {
                                               () {
                                                 if (mounted) {
                                                   setState(() {
-                                                    _isButon = false;
+                                                    _isLoading = false;
                                                   });
                                                 }
                                               },
@@ -182,10 +183,16 @@ class _PageForgotPasswordState extends State<PageForgotPassword> {
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                   ),
-                                  child: Text(
-                                    "Gönder",
-                                    style: TextStyle(color: kTextWhiteColor),
-                                  ),
+                                  child: _isLoading
+                                      ? CircularProgressIndicator(
+                                          color: kTextWhiteColor,
+                                        )
+                                      : Text(
+                                          "Gönder",
+                                          style: TextStyle(
+                                            color: kTextWhiteColor,
+                                          ),
+                                        ),
                                 ),
                               ),
                             ],
