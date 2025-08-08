@@ -14,8 +14,9 @@
 ---
 
 ### 🛠️ Kullanılan Teknolojiler
-- Dart
-- Flutter
+- Dart 3.8.1
+- Flutter 3.32.4
+- DevTools 2.45.1
 - RESTful API
 - State Management (Provider)
 
