@@ -1,5 +1,5 @@
-import 'package:film_app/pages/page_home.dart';
-import 'package:film_app/widgets/constant.dart';
+import 'package:flutter_api_book_example/pages/page_home.dart';
+import 'package:flutter_api_book_example/widgets/constant.dart';
 import 'package:flutter/material.dart';
 
 class PageMyAddresses extends StatefulWidget {

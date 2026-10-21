@@ -1,9 +1,9 @@
-import 'package:film_app/features_personal/user_model.dart';
-import 'package:film_app/pages/page_home.dart';
-import 'package:film_app/pages/page_personel_information.dart';
-import 'package:film_app/pages/user_operations/page_my_addresses.dart';
-import 'package:film_app/pages/user_operations/page_settings.dart';
-import 'package:film_app/widgets/constant.dart';
+import 'package:flutter_api_book_example/features_personal/user_model.dart';
+import 'package:flutter_api_book_example/pages/page_home.dart';
+import 'package:flutter_api_book_example/pages/page_personel_information.dart';
+import 'package:flutter_api_book_example/pages/user_operations/page_my_addresses.dart';
+import 'package:flutter_api_book_example/pages/user_operations/page_settings.dart';
+import 'package:flutter_api_book_example/widgets/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 

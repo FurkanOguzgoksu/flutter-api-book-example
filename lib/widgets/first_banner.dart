@@ -1,8 +1,8 @@
 // İlk açılışta kullanıcıyı karşılama ve internet bağlantı kontrolü sağlanmaktadır.
 
 import 'dart:async';
-import 'package:film_app/features_personal/user_model.dart';
-import 'package:film_app/widgets/constant.dart';
+import 'package:flutter_api_book_example/features_personal/user_model.dart';
+import 'package:flutter_api_book_example/widgets/constant.dart';
 import 'package:flutter/material.dart';
 
 class FirstBanner extends StatefulWidget {

@@ -1,12 +1,12 @@
 import 'dart:convert';
-import 'package:film_app/pages/user_operations/page_forgot_password.dart';
-import 'package:film_app/pages/user_operations/page_sign_up.dart';
+import 'package:flutter_api_book_example/pages/user_operations/page_forgot_password.dart';
+import 'package:flutter_api_book_example/pages/user_operations/page_sign_up.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:film_app/widgets/constant.dart';
-import 'package:film_app/features_personal/user_model.dart';
-import 'package:film_app/pages/page_home.dart';
-import 'package:film_app/services/auth_helper.dart';
+import 'package:flutter_api_book_example/widgets/constant.dart';
+import 'package:flutter_api_book_example/features_personal/user_model.dart';
+import 'package:flutter_api_book_example/pages/page_home.dart';
+import 'package:flutter_api_book_example/services/auth_helper.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 
 void main() => runApp(

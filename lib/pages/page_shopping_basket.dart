@@ -1,8 +1,8 @@
-import 'package:film_app/features_personal/user_model.dart';
-import 'package:film_app/pages/page_payment_transaction.dart';
-import 'package:film_app/provider/provider_basket.dart';
-import 'package:film_app/widgets/card_list.dart';
-import 'package:film_app/widgets/constant.dart';
+import 'package:flutter_api_book_example/features_personal/user_model.dart';
+import 'package:flutter_api_book_example/pages/page_payment_transaction.dart';
+import 'package:flutter_api_book_example/provider/provider_basket.dart';
+import 'package:flutter_api_book_example/widgets/card_list.dart';
+import 'package:flutter_api_book_example/widgets/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';

@@ -1,8 +1,8 @@
-import 'package:film_app/provider/provider_favorite.dart';
-import 'package:film_app/widgets/constant.dart';
+import 'package:flutter_api_book_example/provider/provider_favorite.dart';
+import 'package:flutter_api_book_example/widgets/constant.dart';
 import 'package:flutter/material.dart';
-import 'package:film_app/widgets/card_grid.dart';
-import 'package:film_app/pages/page_book_detail.dart';
+import 'package:flutter_api_book_example/widgets/card_grid.dart';
+import 'package:flutter_api_book_example/pages/page_book_detail.dart';
 import 'package:provider/provider.dart';
 
 class PageFavorite extends StatefulWidget {

@@ -1,9 +1,9 @@
-import 'package:film_app/provider/provider_favorite.dart';
+import 'package:flutter_api_book_example/provider/provider_favorite.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:film_app/widgets/constant.dart';
-import 'package:film_app/provider/provider_basket.dart';
-import 'package:film_app/features_book/features_book.dart';
+import 'package:flutter_api_book_example/widgets/constant.dart';
+import 'package:flutter_api_book_example/provider/provider_basket.dart';
+import 'package:flutter_api_book_example/features_book/features_book.dart';
 
 class CardListBook extends StatelessWidget {
   final Book book;
