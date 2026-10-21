@@ -56,6 +56,17 @@
   <img src="screenshots/Screenshot_20250711_154316.jpg" alt="Sipariş Özeti" width="250"/>
 </p>
 
+#### ☀️ Light Mod & 🌙 Dark Mod
+<p>
+  <img src="screenshots/Screenshot_20250713_200728.jpg" alt="Ayarlar - Light Mod" width="250" style="margin-right: 50px;"/>
+  <img src="screenshots/Screenshot_20250713_200739.jpg" alt="Ayarlar - Dark Mod" width="250"/>
+</p>
+
+#### ⏳ Giriş Kontrolü
+<p>
+  <img src="screenshots/Screenshot_20250713_230256.jpg" alt="Bilgileriniz kontrol ediliyor" width="250"/>
+</p>
+
 ---
 
 ### 🚀 Kurulum
