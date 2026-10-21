@@ -1,5 +1,5 @@
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:film_app/features_personal/user_model.dart';
+import 'package:flutter_api_book_example/features_personal/user_model.dart';
 
 class AuthHelper {
   static Future<void> saveUserToPrefs(UserModel user) async {

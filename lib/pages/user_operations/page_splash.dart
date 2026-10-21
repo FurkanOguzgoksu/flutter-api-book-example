@@ -1,6 +1,6 @@
-import 'package:film_app/features_personal/user_model.dart';
-import 'package:film_app/pages/page_home.dart';
-import 'package:film_app/pages/user_operations/page_log_in.dart';
+import 'package:flutter_api_book_example/features_personal/user_model.dart';
+import 'package:flutter_api_book_example/pages/page_home.dart';
+import 'package:flutter_api_book_example/pages/user_operations/page_log_in.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

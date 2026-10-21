@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:film_app/widgets/constant.dart';
+import 'package:flutter_api_book_example/widgets/constant.dart';
 
 class PageForgotPassword extends StatefulWidget {
   const PageForgotPassword({super.key});

@@ -1,7 +1,7 @@
-import 'package:film_app/pages/user_operations/page_splash.dart';
-import 'package:film_app/provider/provider_basket.dart';
-import 'package:film_app/provider/provider_favorite.dart';
-import 'package:film_app/provider/provider_theme.dart';
+import 'package:flutter_api_book_example/pages/user_operations/page_splash.dart';
+import 'package:flutter_api_book_example/provider/provider_basket.dart';
+import 'package:flutter_api_book_example/provider/provider_favorite.dart';
+import 'package:flutter_api_book_example/provider/provider_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';

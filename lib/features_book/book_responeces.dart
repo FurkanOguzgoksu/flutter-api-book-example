@@ -1,5 +1,5 @@
-import 'package:film_app/features_book/features_book.dart';
-import 'package:film_app/features_book/features_page_info.dart';
+import 'package:flutter_api_book_example/features_book/features_book.dart';
+import 'package:flutter_api_book_example/features_book/features_page_info.dart';
 
 class BookResponse {
   final List<Book> books;
